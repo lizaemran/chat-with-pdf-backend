@@ -7,7 +7,7 @@ module.exports = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     },
-    db_url: process.env.DB_URL,
+    db_url: process.env.MONGODB_URI,
   },
   jwt: {
     jwtSecret: "mysecrettoken",
