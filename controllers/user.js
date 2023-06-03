@@ -122,72 +122,72 @@ const userRegister = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-  // try {
-  //   let code = req.params.token
-  //   const userCredentials = await UserCredential.findOne(
-  //     {
-  //       sms_and_email_auth_token: code,
-  //     },
-  //     { user: 1 }
-  //   );
-  //   if (!userCredentials) {
-  //     return res.status(400).send({
-  //       msg: "Invalid Auth Code, verification failed",
-  //       success: false,
-  //     }); //msg:"User does not exist"
-  //   }
-  //   const user = await User.findById(userCredentials.user, {
-  //     is_email_verified: 1,
-  //   });
+  try {
+    let code = req.params.token
+    const userCredentials = await UserCredential.findOne(
+      {
+        sms_and_email_auth_token: code,
+      },
+      { user: 1 }
+    );
+    if (!userCredentials) {
+      return res.status(400).send({
+        msg: "Invalid Auth Code, verification failed",
+        success: false,
+      }); //msg:"User does not exist"
+    }
+    const user = await User.findById(userCredentials.user, {
+      is_email_verified: 1,
+    });
 
-  //   if (user.is_email_verified) {
-  //     return res.status(409).send({
-  //       msg: "Email already verified",
-  //       success: "false",
-  //     });
-  //   }
-  //   if (user) {
-  //     const session = await mongoose.startSession();
-  //     try {
-  //       // session started
-  //       session.startTransaction();
+    if (user.is_email_verified) {
+      return res.status(409).send({
+        msg: "Email already verified",
+        success: "false",
+      });
+    }
+    if (user) {
+      const session = await mongoose.startSession();
+      try {
+        // session started
+        session.startTransaction();
 
-  //       await User.findByIdAndUpdate(
-  //         user._id,
-  //         { is_email_verified: true },
-  //         { new: false } // set it to true, if we wanna return updated value
-  //       ).session(session);
-  //       await UserCredential.findByIdAndUpdate(
-  //         userCredentials._id,
-  //         { sms_and_email_auth_token: "" },
-  //         { new: false } // set it to true, if we wanna return updated value
-  //       ).session(session);
+        await User.findByIdAndUpdate(
+          user._id,
+          { is_email_verified: true },
+          { new: false } // set it to true, if we wanna return updated value
+        ).session(session);
+        await UserCredential.findByIdAndUpdate(
+          userCredentials._id,
+          { sms_and_email_auth_token: "" },
+          { new: false } // set it to true, if we wanna return updated value
+        ).session(session);
 
-  //       await session.commitTransaction();
-  //       session.endSession();
+        await session.commitTransaction();
+        session.endSession();
 
-  //       return res.status(200).send({
-  //         status: 200,
-  //         msg: "Email verified successful. Now you can login",
-  //         success: true,
-  //       });
-  //     } catch (error) {
-  //       await session.abortTransaction();
-  //       session.endSession();
+        return res.status(200).send({
+          status: 200,
+          msg: "Email verified successful. Now you can login",
+          success: true,
+        });
+      } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
 
-  //       return res.status(400).send({
-  //         success: false,
-  //         msg: "Ooops, something went wrong - Verification failed",
-  //       });
-  //     }
-  //   }
-  // } catch (error) {
-  //   // console.log("Error", error);
-  //   return res.status(500).send({
-  //     success: false,
-  //     msg: "Ooops, something went wrong - Verification failed",
-  //   });
-  // }
+        return res.status(400).send({
+          success: false,
+          msg: "Ooops, something went wrong - Verification failed",
+        });
+      }
+    }
+  } catch (error) {
+    // console.log("Error", error);
+    return res.status(500).send({
+      success: false,
+      msg: "Ooops, something went wrong - Verification failed",
+    });
+  }
 };
 
 const userLogin = async (req, res) => {
