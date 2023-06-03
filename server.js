@@ -22,7 +22,7 @@ app.use(express.json())
 
 // const { mongo } = require('../config/environment');
 function getConnection() {
-  console.log("in Connection");
+  console.log("in Connection",process.env.MONGODB_URI);
   mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Mongodb connected");
    
