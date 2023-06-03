@@ -9,6 +9,7 @@ const database = require('./utils/connection');
 
 
 
+
 // Enable cors
 app.use(cors({
   origin: '*'
