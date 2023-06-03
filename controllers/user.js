@@ -226,7 +226,7 @@ const userLogin = async (req, res) => {
                   fname: user.fname,
                 },
                 config.jwt.jwtSecret,
-                { expiresIn: 60 }
+                { expiresIn: 60 * 60  }
               ),
             },
           });
