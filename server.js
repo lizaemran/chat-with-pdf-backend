@@ -4,6 +4,7 @@ const cors = require("cors");
 const expressFileupload = require("express-fileupload");
 const routes = require("./routes")
 const app = express();
+const mongoose = require('mongoose');
 const port = process.env.PORT
 // const database = require('./utils/connection');
 
@@ -18,6 +19,21 @@ app.use(express.json())
 
 // connect to db
 // database.getConnection();
+
+// const { mongo } = require('../config/environment');
+function getConnection() {
+  console.log("in Connection");
+  mongoose.connect(process.env.MONGODB_URI).then(() => {
+    console.log("Mongodb connected");
+   
+  }).catch((err) => {
+    console.log({ err });
+    process.exit(1);
+  });
+
+}
+getConnection()
+
 
 // app.use("/api",routes)
 
