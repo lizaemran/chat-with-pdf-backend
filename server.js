@@ -4,17 +4,11 @@ const cors = require("cors");
 const expressFileupload = require("express-fileupload");
 const routes = require("./routes")
 const app = express();
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const port = process.env.PORT
 // const database = require('./utils/connection');
 
 
-
-// const { MongoClient } = require('mongodb');
-// or as an es module:
-// import { MongoClient } from 'mongodb'
-
-// Connection URL
 
 // Enable cors
 app.use(cors({
