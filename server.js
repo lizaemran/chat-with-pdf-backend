@@ -17,7 +17,7 @@ app.use(expressFileupload())
 app.use(express.json())
 
 // connect to db
-database.getConnection();
+// database.getConnection();
 
 app.use("/api",routes)
 
