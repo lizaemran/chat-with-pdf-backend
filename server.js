@@ -5,7 +5,7 @@ const expressFileupload = require("express-fileupload");
 // const routes = require("./routes")
 const app = express();
 const port = process.env.PORT
-const database = require('./utils/connection');
+// const database = require('./utils/connection');
 
 // Enable cors
 app.use(cors({
