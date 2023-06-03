@@ -114,16 +114,23 @@ let upload = async (req, res) => {
         model: "gpt-3.5-turbo",
         messages: [
           { role: "user", content: `Here is a text tell me about it ${data}` },
+        ],
+      });
+      const response1 = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
           { role: "user", content: "list down some questions regarding this text"},
         ],
       });
 
       let allMessages = [
         { role: "user", content: `Here is a text tell me about it ${data}` },
+        response.data.choices[0].message,
         { role: "user", content: "list down some questions regarding this text"},
+        response1.data.choices[0].message
 
       ];
-      allMessages.push(response.data.choices[0].message);
+
       await Chat.create({
         userId: req.user.id,
         title:"New Chat",
