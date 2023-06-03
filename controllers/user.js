@@ -1,9 +1,9 @@
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 // const bcrypt = require("bcrypt");
 const { User, UserCredential } = require("../models/User");
 const mongoose = require("mongoose");
 const config = require('../config/environment');
-// const sendEmail  = require("../helpers")
+const sendEmail  = require("../helpers")
 const userRegister = async (req, res) => {
   // const session = await mongoose.startSession();
   // session.startTransaction();

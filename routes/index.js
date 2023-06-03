@@ -8,9 +8,9 @@ const {isAuthenticated} = require("../middleware")
 // router.get("/verifyEmail/:token", verifyEmail);
 // router.post("/userLogin", userLogin);
 
-// router.post("/upload", isAuthenticated,upload);
-// router.post("/chat", isAuthenticated,chat);
-// router.get("/getAllChats", isAuthenticated,getAllChats);
+router.post("/upload", isAuthenticated,upload);
+router.post("/chat", isAuthenticated,chat);
+router.get("/getAllChats", isAuthenticated,getAllChats);
 
 
 module.exports = router;
