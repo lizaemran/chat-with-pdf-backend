@@ -4,10 +4,32 @@ const cors = require("cors");
 const expressFileupload = require("express-fileupload");
 const routes = require("./routes")
 const app = express();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const port = process.env.PORT
 // const database = require('./utils/connection');
 
+
+
+const { MongoClient } = require('mongodb');
+// or as an es module:
+// import { MongoClient } from 'mongodb'
+
+// Connection URL
+const url = process.env.MONGODB_URI;
+const client = new MongoClient(url);
+
+// Database Name
+
+async function main() {
+  try{
+  // Use connect method to connect to the server
+  await client.connect();
+  console.log('Connected successfully to server');
+  }catch(err){
+    console.log('Error connecting to server',err)
+  }
+}
+main()
 // Enable cors
 app.use(cors({
   origin: '*'
