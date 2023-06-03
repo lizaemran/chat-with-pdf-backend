@@ -24,7 +24,7 @@ database.getConnection();
 
 
 
-// app.use("/api",routes)
+app.use("/api",routes)
 
 // default / route
 app.get("/", async (_, res) => {
