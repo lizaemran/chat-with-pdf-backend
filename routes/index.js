@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const { chat, upload,getAllChats } = require("../controllers/chat");
+const { chat, upload,getAllChats } = require("../controllers/chat");
 // const { userRegister, userLogin, verifyEmail } = require("../controllers/user");
 // const {isAuthenticated} = require("../middleware")
 
