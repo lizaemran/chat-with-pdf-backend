@@ -114,11 +114,14 @@ let upload = async (req, res) => {
         model: "gpt-3.5-turbo",
         messages: [
           { role: "user", content: `Here is a text tell me about it ${data}` },
+          { role: "user", content: "list down some questions regarding this text"},
         ],
       });
 
       let allMessages = [
         { role: "user", content: `Here is a text tell me about it ${data}` },
+        { role: "user", content: "list down some questions regarding this text"},
+
       ];
       allMessages.push(response.data.choices[0].message);
       await Chat.create({
@@ -128,7 +131,7 @@ let upload = async (req, res) => {
       })
       return res
         .status(200)
-        .json({ message: "Success", response: allMessages });
+        .json({ message: "Success" });
     } catch (error) {
       console.error("Error in upload", error);
       return res
