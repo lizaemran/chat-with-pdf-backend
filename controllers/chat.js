@@ -4,7 +4,7 @@ const pdfParse = require("pdf-parse");
 const xlsx = require("xlsx");
 const Docxtemplater = require('docxtemplater');
 const PizZip = require("pizzip");
-const {Chat} = require("../models/Chat")
+// const {Chat} = require("../models/Chat")
 // const {User} = require("../models/User")
 // open ai config
 const configuration = new Configuration({
