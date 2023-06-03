@@ -33,4 +33,45 @@ app.listen(port, () => {
 });
 
 
+let portException= false;
 
+process.on('uncaughtException', (error, origin) => {
+    console.log('----- Uncaught exception -----')
+    console.log(error)
+    console.log('----- Exception origin -----')
+    console.log(origin)
+    if(error.code == "EADDRINUSE"){
+    portException= true;
+    }
+ 
+
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('----- Unhandled Rejection at -----')
+    console.log(promise)
+    console.log('----- Reason -----')
+    console.log(reason)
+  
+})
+process.on('Error', (reason, promise) => {
+    console.log('----- Error Rejection at -----')
+    console.log(promise)
+    console.log('----- Reason -----')
+    console.log(reason)
+})
+process.on('error', (reason, promise) => {
+    console.log('----- error Rejection at -----')
+    console.log(promise)
+    console.log('----- Reason -----')
+    console.log(reason)
+})
+process.on('exit', (reason, promise) => {
+    console.log("Server Exit Reason::::",reason)
+    if(reason == 1){
+  
+    }else{
+      console.log("Server is shutting down .......")
+      server.close()
+    }
+})
