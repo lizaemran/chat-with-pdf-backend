@@ -1,15 +1,25 @@
-// const mongoose = require('mongoose');
-// const { mongo } = require('../config/environment');
-// function getConnection() {
-//   mongoose.connect(mongo.db_url, mongo.options).then(() => {
-//     console.log("Mongodb connected");
-   
-//   }).catch((err) => {
-//     console.log({ err });
-//     process.exit(1);
-//   });
+const mongoose = require('mongoose');
+const { mongo } = require('../config/environment');
+function getConnection() {
+  mongoose.connect(mongo.db_url, mongo.options);
+  mongoose.connection.on('connected', () =>{
+    console.log('connection established');
+  });
 
-// }
+  mongoose.connection.on('error', (err) => {
+    console.log('Mongoose default connection error: ' + err);
+    reconnect()
+  });
+  mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose default connection disconnected');
+   reconnect()
+  });
 
+}
 
-// module.exports = { getConnection }
+function reconnect(){
+  mongoose.connect(mongo.db_url, mongo.options);
+  console.log("reconnected database")
+}
+
+module.exports = { getConnection }

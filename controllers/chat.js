@@ -4,8 +4,8 @@ const pdfParse = require("pdf-parse");
 const xlsx = require("xlsx");
 const Docxtemplater = require('docxtemplater');
 const PizZip = require("pizzip");
-// const {Chat} = require("../models/Chat")
-// const {User} = require("../models/User")
+const {Chat} = require("../models/Chat")
+const {User} = require("../models/User")
 // open ai config
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -24,11 +24,11 @@ let chat = async (req, res) => {
         .status(400)
         .json({ message: "please provide a prompt", response: {} });
     }
-    // let userDtails = await User.findOne({_id:req.user.id})
-    // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+    let userDtails = await User.findOne({_id:req.user.id})
+    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
     let chat = {}
-    // chat  = await Chat.findOne({userId:req.user.id})
-    // if(!chat) chat = new Chat({userId:req.user.id,title:"New chat"})
+    chat  = await Chat.findOne({userId:req.user.id})
+    if(!chat) chat = new Chat({userId:req.user.id,title:"New chat"})
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -55,8 +55,7 @@ let chat = async (req, res) => {
 
 let getAllChats = async (req, res) => {
   try{
-    let chat  = {}
-    // await Chat.findOne({userId:req.user.id})
+    let chat  = await Chat.findOne({userId:req.user.id})
     return res
     .status(200)
     .json({ message: "Success", response: chat});
@@ -74,8 +73,8 @@ let getAllChats = async (req, res) => {
 // Define route for file upload
 let upload = async (req, res) => {
     try {
-      // let userDtails = await User.findOne({_id:req.user.id})
-      // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+      let userDtails = await User.findOne({_id:req.user.id})
+      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
       // Check if file was uploaded
       if (!req.files.file) {
         return res
@@ -122,11 +121,11 @@ let upload = async (req, res) => {
         { role: "user", content: `Here is a text tell me about it ${data}` },
       ];
       allMessages.push(response.data.choices[0].message);
-      // await Chat.create({
-      //   userId: req.user.id,
-      //   title:"New Chat",
-      //   messages: allMessages
-      // })
+      await Chat.create({
+        userId: req.user.id,
+        title:"New Chat",
+        messages: allMessages
+      })
       return res
         .status(200)
         .json({ message: "Success", response: allMessages });
