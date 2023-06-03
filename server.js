@@ -4,7 +4,7 @@ const cors = require("cors");
 const expressFileupload = require("express-fileupload");
 const routes = require("./routes")
 const app = express();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const port = process.env.PORT
 // const database = require('./utils/connection');
 
