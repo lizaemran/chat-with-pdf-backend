@@ -26,6 +26,7 @@ app.get("/", async (_, res) => {
   res.send("Server is up...");
 });
 
+
 // Server listening
 app.listen(port, () => {
   console.log(`Server listening on port ${port}.`);
