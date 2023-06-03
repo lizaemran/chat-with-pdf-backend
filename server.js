@@ -14,7 +14,7 @@ app.use(cors({
 
 // app.use(expressFileupload())
 // enable req.body
-// app.use(express.json())
+app.use(express.json())
 
 // connect to db
 // database.getConnection();
