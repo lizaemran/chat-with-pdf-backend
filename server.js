@@ -23,17 +23,17 @@ app.use(express.json())
 // database.getConnection();
 
 // const { mongo } = require('../config/environment');
-// function getConnection() {
-//   console.log("in Connection",process.env.MONGODB_URI);
-//   mongoose.connect(process.env.MONGODB_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   }).then(()=>{
-//     console.log("db connected")
-//   })
+function getConnection() {
+  console.log("in Connection",process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(()=>{
+    console.log("db connected")
+  })
 
-// }
-// getConnection()
+}
+getConnection()
 
 
 // app.use("/api",routes)
