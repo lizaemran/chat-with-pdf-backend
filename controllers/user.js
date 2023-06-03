@@ -66,7 +66,7 @@ const userRegister = async (req, res) => {
         newUserCredentials.save({ session });
       }
 
-      const url = `http://localhost:8545/api/verifyEmail/${encryptedToken}`;
+      const url = `https://backend-chat-any-file.vercel.app/api/verifyEmail/${encryptedToken}`;
       const output = `Hi ${req.body.fname},
       <br/> Thanks for registering! <br/><br/> 
       Please <a href=${url}>Click Here</a> to verify your email address
