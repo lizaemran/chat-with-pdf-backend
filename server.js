@@ -2,10 +2,10 @@ require("dotenv").config()
 const express = require('express');
 const cors = require("cors");
 const expressFileupload = require("express-fileupload");
-const routes = require("./routes")
+// const routes = require("./routes")
 const app = express();
 const port = process.env.PORT
-const database = require('./utils/connection');
+// const database = require('./utils/connection');
 
 // Enable cors
 app.use(cors({
@@ -17,9 +17,9 @@ app.use(expressFileupload())
 app.use(express.json())
 
 // connect to db
-database.getConnection();
+// database.getConnection();
 
-app.use("/api",routes)
+// app.use("/api",routes)
 
 // default / route
 app.get("/", async (_, res) => {
