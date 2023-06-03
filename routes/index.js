@@ -4,9 +4,9 @@ const { chat, upload,getAllChats } = require("../controllers/chat");
 const { userRegister, userLogin, verifyEmail } = require("../controllers/user");
 const {isAuthenticated} = require("../middleware")
 
-// router.post("/userRegister", userRegister);
+router.post("/userRegister", userRegister);
 router.get("/verifyEmail/:token", verifyEmail);
-// router.post("/userLogin", userLogin);
+router.post("/userLogin", userLogin);
 
 router.post("/upload", isAuthenticated,upload);
 router.post("/chat", isAuthenticated,chat);
