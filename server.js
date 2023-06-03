@@ -32,7 +32,7 @@ function getConnection() {
   });
 
 }
-getConnection()
+// getConnection()
 
 
 // app.use("/api",routes)
