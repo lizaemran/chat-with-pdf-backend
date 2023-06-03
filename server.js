@@ -23,16 +23,13 @@ app.use(express.json())
 // const { mongo } = require('../config/environment');
 function getConnection() {
   console.log("in Connection",process.env.MONGODB_URI);
-  mongoose.connect(process.env.MONGODB_URI).then(() => {
-    console.log("Mongodb connected");
-   
-  }).catch((err) => {
-    console.log({ err });
-    // process.exit(1);
-  });
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
 
 }
-// getConnection()
+getConnection()
 
 
 // app.use("/api",routes)
