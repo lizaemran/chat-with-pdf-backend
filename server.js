@@ -12,14 +12,14 @@ app.use(cors({
   origin: '*'
 }));
 
-// app.use(expressFileupload())
+app.use(expressFileupload())
 // enable req.body
 app.use(express.json())
 
 // connect to db
-// database.getConnection();
+database.getConnection();
 
-// app.use("/api",routes)
+app.use("/api",routes)
 
 // default / route
 app.get("/", async (_, res) => {
