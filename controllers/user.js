@@ -1,12 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { User, UserCredential } = require("../models/User");
-const mongoose = require("mongoose");
 const config = require('../config/environment');
 const sendEmail  = require("../helpers")
+
 const userRegister = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     try {
       //See if User Exists
@@ -37,14 +35,13 @@ const userRegister = async (req, res) => {
         user.fname = req.body.fname;
         user.lname = req.body.lname;
 
-        await user.save({ session });
-        await UserCredential.findOneAndUpdate(
-          { user: user._id },
-          {
-            password: encryptedPassword,
-            sms_and_email_auth_token: encryptedToken,
-          }
-        ).session(session);
+        await user.save();
+        let userCred = await UserCredential.findOne({ user: user._id })
+          
+        userCred.password = encryptedPassword;
+        userCred.sms_and_email_auth_token = encryptedToken;
+        await userCred.save()
+
         return res.status(409).send({
           success: false,
           msg: "Already signup - please check you email address",
@@ -53,7 +50,7 @@ const userRegister = async (req, res) => {
         // if user not exists
         // Create instance of user and save it to database
         let newUser = new User(req.body);
-        let saveUser = await newUser.save({ session });
+        let saveUser = await newUser.save();
 
         let userCredentialsBody = {
           password: encryptedPassword,
@@ -63,7 +60,7 @@ const userRegister = async (req, res) => {
 
         // Create instance of user credentials and save it to database
         const newUserCredentials = new UserCredential(userCredentialsBody);
-        newUserCredentials.save({ session });
+        await newUserCredentials.save();
       }
 
       const url = `https://backend-chat-any-file.vercel.app/api/verifyEmail/${encryptedToken}`;
@@ -81,9 +78,7 @@ const userRegister = async (req, res) => {
 
       await sendEmail(mailOptions)
         .then(async (response) => {
-          console.log("email send")
-          await session.commitTransaction();
-          session.endSession();
+          console.log("email send:",response)
 
           return res.status(200).send({
             success: true,
@@ -93,8 +88,6 @@ const userRegister = async (req, res) => {
         .catch(async (err) => {
           console.log(err)
 
-          await session.abortTransaction();
-          session.endSession();
 
           return res.status(400).send({
             success: false,
@@ -104,8 +97,6 @@ const userRegister = async (req, res) => {
     } catch (error) {
       console.log(error)
 
-      await session.abortTransaction();
-      session.endSession();
 
       return res.status(400).send({
         success: false,
@@ -147,24 +138,19 @@ const verifyEmail = async (req, res) => {
       });
     }
     if (user) {
-      const session = await mongoose.startSession();
       try {
-        // session started
-        session.startTransaction();
 
         await User.findByIdAndUpdate(
           user._id,
           { is_email_verified: true },
           { new: false } // set it to true, if we wanna return updated value
-        ).session(session);
+        );
         await UserCredential.findByIdAndUpdate(
           userCredentials._id,
           { sms_and_email_auth_token: "" },
           { new: false } // set it to true, if we wanna return updated value
-        ).session(session);
+        )
 
-        await session.commitTransaction();
-        session.endSession();
 
         return res.status(200).send({
           status: 200,
@@ -172,8 +158,6 @@ const verifyEmail = async (req, res) => {
           success: true,
         });
       } catch (error) {
-        await session.abortTransaction();
-        session.endSession();
 
         return res.status(400).send({
           success: false,
@@ -212,7 +196,7 @@ const userLogin = async (req, res) => {
     bcrypt.compare(
       password,
       UserCredentials.password,
-      async (err, response) => {
+      async (_, response) => {
         if (response) {
           return res.status(200).send({
             status: 200,
