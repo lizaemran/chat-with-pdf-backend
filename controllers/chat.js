@@ -27,7 +27,7 @@ let chat = async (req, res) => {
     }
     let userDtails = await User.findOne({_id:req.user.id})
     if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
-    
+
     let chat  = await Chat.findOne({_id,userId:req.user.id})
     if(!chat) {
       return res
@@ -41,6 +41,35 @@ let chat = async (req, res) => {
 
     chat.messages = [...chat.messages,{role: "user", content: message},response.data.choices[0].message]
     await chat.save();
+    
+    return res
+      .status(200)
+      .json({ message: "Success", response: response.data.choices[0].message });
+  } catch (error) {
+    console.error("Error in chat", error);
+    return res
+      .status(500)
+      .json({
+        message: "Internal server error.",
+        response: { error: error.message },
+      });
+  }
+}
+
+let openChat = async (req, res) => {
+  try {
+    let messages = req.body.messages;
+ 
+    if (!messages) {
+      return res
+        .status(400)
+        .json({ message: "please provide a prompt", response: {} });
+    }
+    
+    const response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages
+    });
     
     return res
       .status(200)
@@ -157,6 +186,7 @@ let upload = async (req, res) => {
   module.exports = {
     upload,
     chat,
+    openChat,
     getAllChats
   };
 
