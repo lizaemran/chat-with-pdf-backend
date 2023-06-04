@@ -133,7 +133,7 @@ let upload = async (req, res) => {
 
       await Chat.create({
         userId: req.user.id,
-        title:"New Chat",
+        title: req.files.file.name,
         messages: allMessages
       })
       return res
