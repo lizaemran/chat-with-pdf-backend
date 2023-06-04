@@ -18,6 +18,7 @@ const openai = new OpenAIApi(configuration);
 let chat = async (req, res) => {
   try {
     let message = req.body.message;
+    let _id = req.body._id;
  
     if (!message) {
       return res
@@ -26,10 +27,13 @@ let chat = async (req, res) => {
     }
     let userDtails = await User.findOne({_id:req.user.id})
     if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
-    let chat = {}
-    chat  = await Chat.findOne({userId:req.user.id})
-    if(!chat) chat = new Chat({userId:req.user.id,title:"New chat"})
-
+    
+    let chat  = await Chat.findOne({_id,userId:req.user.id})
+    if(!chat) {
+      return res
+    .status(400)
+    .json({ message: "no chat found", response: {} });
+    }
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages:[...chat.messages,{role: "user", content: message}],
