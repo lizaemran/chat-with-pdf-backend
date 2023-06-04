@@ -55,7 +55,7 @@ let chat = async (req, res) => {
 
 let getAllChats = async (req, res) => {
   try{
-    let chat  = await Chat.find({userId:req.user.id})
+    let chat  = await Chat.find({userId:req.user.id}).sort({createdAt:-1})
     return res
     .status(200)
     .json({ message: "Success", response: chat});
