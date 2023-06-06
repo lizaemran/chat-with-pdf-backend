@@ -103,6 +103,24 @@ let getAllChats = async (req, res) => {
   }
 }
 
+
+let deleteChat = async (req, res) => {
+  try{
+    await Chat.remove({_id:req.body._id,userId:req.user.id})
+    return res
+    .status(200)
+    .json({ message: "Successfully deleted"});
+  }catch(err){
+    console.error("Error in get all chat", err);
+    return res
+      .status(500)
+      .json({
+        message: "Internal server error.",
+        response: { error: err.message },
+      });
+  }
+}
+
 // Define route for file upload
 let upload = async (req, res) => {
     try {
@@ -187,7 +205,8 @@ let upload = async (req, res) => {
     upload,
     chat,
     openChat,
-    getAllChats
+    getAllChats,
+    deleteChat
   };
 
 
