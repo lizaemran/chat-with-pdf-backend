@@ -12,7 +12,7 @@ const userRegister = async (req, res) => {
       if (user && user.is_email_verified) {
         return res
           .status(409)
-          .send({ msg: "User already exists!", success: false });
+          .send({ msg: "User already Registered!", success: false });
       }
 
       const encryptedPassword = await bcrypt.hash(
@@ -44,7 +44,7 @@ const userRegister = async (req, res) => {
 
         return res.status(409).send({
           success: false,
-          msg: "Already signup - please check you email address",
+          msg: "Please check you email address to verify your account",
         });
       } else {
         // if user not exists

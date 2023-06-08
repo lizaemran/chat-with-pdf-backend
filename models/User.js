@@ -19,6 +19,18 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  is_user_plus :{
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type:Number,
+    default:Date.now()
+  },
+  updatedAt: {
+    type:Number,
+    default:Date.now()
+  },
 
 });
 
@@ -35,7 +47,15 @@ const UserCredentialsSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  }
+  },
+  createdAt: {
+    type:Number,
+    default:Date.now()
+  },
+  updatedAt: {
+    type:Number,
+    default:Date.now()
+  },
 });
 
 let User = mongoose.model("user", UserSchema);

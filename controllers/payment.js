@@ -1,25 +1,30 @@
 require("dotenv").config();
-
+const { User } = require("../models/User");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST)
 
 let payments =  async (req, res) => {
-	let { amount, id } = req.body
 	try {
+	let { amount, id } = req.body
+	let userDtails = await User.findOne({_id:req.user.id})
+    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+
 		const payment = await stripe.paymentIntents.create({
 			amount,
 			currency: "USD",
-			description: "Spatula company",
+			description: "bought chat any file plus",
 			payment_method: id,
 			confirm: true
 		})
 		console.log("Payment", payment)
-		res.json({
+		userDtails.is_user_plus = true;
+		return res.json({
 			message: "Payment successful",
 			success: true
 		})
 	} catch (error) {
 		console.log("Error", error)
-		res.json({
+		return res.json({
+			error:error.message,
 			message: "Payment failed",
 			success: false
 		})
