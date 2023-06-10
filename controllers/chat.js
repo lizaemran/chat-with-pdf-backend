@@ -125,9 +125,9 @@ let deleteChat = async (req, res) => {
 // Define route for file upload
 let upload = async (req, res) => {
     try {
-      // let userDtails = await User.findOne({_id:req.user.id})
-      // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
-      // // Check if file was uploaded
+      let userDtails = await User.findOne({_id:req.user.id})
+      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
+      // Check if file was uploaded
       if (!req.files.file) {
         return res
           .status(400)
@@ -159,22 +159,14 @@ let upload = async (req, res) => {
           { role: "user", content: `Here is a text tell me about it ${data}` },
         ],
       });
-      const response1 = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "user", content: "list down some questions regarding this text"},
-        ],
-      });
+    
 
       let allMessages = [
         { role: "user", content: `Here is a text tell me about it ${data}` },
         response.data.choices[0].message,
-        { role: "user", content: "list down some questions regarding this text"},
-        response1.data.choices[0].message
-
       ];
 
-      new Chat({
+      await Chat.create({
         userId: req.user.id,
         title: req.files.file.name,
         messages: allMessages
