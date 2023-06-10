@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  plus_expiry:{
+    type:Number,
+  },
   createdAt: {
     type:Number,
     default:Date.now()

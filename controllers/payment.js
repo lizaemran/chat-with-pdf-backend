@@ -16,7 +16,11 @@ let payments =  async (req, res) => {
 			confirm: true
 		})
 		console.log("Payment", payment)
+
 		userDtails.is_user_plus = true;
+		userDtails.plus_expiry = Date.now() + 2629800000; // 1 month
+		await userDtails.save()
+		
 		return res.json({
 			message: "Payment successful",
 			success: true
