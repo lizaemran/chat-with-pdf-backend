@@ -125,9 +125,9 @@ let deleteChat = async (req, res) => {
 // Define route for file upload
 let upload = async (req, res) => {
     try {
-      let userDtails = await User.findOne({_id:req.user.id})
-      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
-      // Check if file was uploaded
+      // let userDtails = await User.findOne({_id:req.user.id})
+      // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
+      // // Check if file was uploaded
       if (!req.files.file) {
         return res
           .status(400)
@@ -174,7 +174,7 @@ let upload = async (req, res) => {
 
       ];
 
-      await Chat.create({
+      new Chat({
         userId: req.user.id,
         title: req.files.file.name,
         messages: allMessages
