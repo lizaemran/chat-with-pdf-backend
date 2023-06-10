@@ -42,10 +42,7 @@ const userRegister = async (req, res) => {
         userCred.sms_and_email_auth_token = encryptedToken;
         await userCred.save()
 
-        return res.status(409).send({
-          message: "Please check you email address to verify your account",
-          response:{success: false}
-        });
+      
       } else {
         // if user not exists
         // Create instance of user and save it to database
