@@ -1,9 +1,10 @@
 require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
-const pdfParse = require("pdf-parse");
-const xlsx = require("xlsx");
-const Docxtemplater = require('docxtemplater');
-const PizZip = require("pizzip");
+
+const pdfParse = require("pdf-parse"); // for pdf
+const xlsx = require("xlsx"); // for excel
+const mammoth = require('mammoth'); //// for doc
+
 const {Chat} = require("../models/Chat")
 const {User} = require("../models/User")
 // open ai config
@@ -145,18 +146,9 @@ let upload = async (req, res) => {
         data = data.text;
       } else if (arr[1] == "doc" || arr[1] == "docx") {
         console.log("req.files.file.",req.files.file)
-        const zip = new PizZip(req.files.file.data);
-
-        const doc = new Docxtemplater(zip);
-        
-        // Render the document
-        doc.render();
-
         // Extract text from the document
-        const text = doc.getFullText();
-
-        // Print the extracted text
-        console.log(text);        
+        let result= await mammoth.extractRawText({buffer:req.files.file.data})
+            data = result.value;
       }
 
 
