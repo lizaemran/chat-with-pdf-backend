@@ -6,7 +6,7 @@ let payments =  async (req, res) => {
 	try {
 	let { amount, id } = req.body
 	let userDtails = await User.findOne({_id:req.user.id})
-    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
 
 		const payment = await stripe.paymentIntents.create({
 			amount,
@@ -21,16 +21,15 @@ let payments =  async (req, res) => {
 		userDtails.plus_expiry = Date.now() + 2629800000; // 1 month
 		await userDtails.save()
 		
-		return res.json({
+		return res.status(200).json({
 			message: "Payment successful",
-			success: true
+			response: {success: true}
 		})
 	} catch (error) {
 		console.log("Error", error)
-		return res.json({
-			error:error.message,
+		return res.status(500).json({
 			message: "Payment failed",
-			success: false
+			response: {success: false,error:error.message}
 		})
 	}
 }

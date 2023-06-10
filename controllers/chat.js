@@ -26,7 +26,7 @@ let chat = async (req, res) => {
         .json({ message: "please provide a prompt", response: {} });
     }
     let userDtails = await User.findOne({_id:req.user.id})
-    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
 
     let chat  = await Chat.findOne({_id,userId:req.user.id})
     if(!chat) {
@@ -109,7 +109,7 @@ let deleteChat = async (req, res) => {
     await Chat.remove({_id:req.body._id,userId:req.user.id})
     return res
     .status(200)
-    .json({ message: "Successfully deleted"});
+    .json({ message: "Successfully deleted",response: {}});
   }catch(err){
     console.error("Error in get all chat", err);
     return res
@@ -125,7 +125,7 @@ let deleteChat = async (req, res) => {
 let upload = async (req, res) => {
     try {
       let userDtails = await User.findOne({_id:req.user.id})
-      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue"})
+      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
       // Check if file was uploaded
       if (!req.files.file) {
         return res
@@ -189,7 +189,7 @@ let upload = async (req, res) => {
       })
       return res
         .status(200)
-        .json({ message: "Success" });
+        .json({ message: "Success" ,response: {}});
     } catch (error) {
       console.error("Error in upload", error);
       return res

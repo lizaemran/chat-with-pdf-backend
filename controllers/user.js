@@ -12,7 +12,7 @@ const userRegister = async (req, res) => {
       if (user && user.is_email_verified) {
         return res
           .status(409)
-          .send({ msg: "User already Registered!", success: false });
+          .send({ message: "User already Registered!", response :{success: false} });
       }
 
       const encryptedPassword = await bcrypt.hash(
@@ -43,8 +43,8 @@ const userRegister = async (req, res) => {
         await userCred.save()
 
         return res.status(409).send({
-          success: false,
-          msg: "Please check you email address to verify your account",
+          message: "Please check you email address to verify your account",
+          response:{success: false}
         });
       } else {
         // if user not exists
@@ -81,8 +81,8 @@ const userRegister = async (req, res) => {
           console.log("email send:",response)
 
           return res.status(200).send({
-            success: true,
-            msg: "Email sent Successfully. To Login, Please verify your email",
+            response:{success: true},
+            message: "Email sent Successfully. To Login, Please verify your email",
           });
         })
         .catch(async (err) => {
@@ -90,8 +90,8 @@ const userRegister = async (req, res) => {
 
 
           return res.status(400).send({
-            success: false,
-            msg: `Error in sending verification email, Please register again ${err}`,
+            response:{success: false},
+            message: `Error in sending verification email, Please register again ${err}`,
           });
         });
     } catch (error) {
@@ -99,8 +99,8 @@ const userRegister = async (req, res) => {
 
 
       return res.status(400).send({
-        success: false,
-        msg: `Ooops, something went wrong - Registration failed ${error.message}`,
+        response:{success: false},
+        message: `Ooops, something went wrong - Registration failed ${error.message}`,
       });
     }
   } catch (error) {
@@ -123,8 +123,8 @@ const verifyEmail = async (req, res) => {
     );
     if (!userCredentials) {
       return res.status(400).send({
-        msg: "Invalid Auth Code, verification failed",
-        success: false,
+        message: "Invalid Auth Code, verification failed",
+        response:{success: false},
       }); //msg:"User does not exist"
     }
     const user = await User.findById(userCredentials.user, {
@@ -133,8 +133,8 @@ const verifyEmail = async (req, res) => {
 
     if (user.is_email_verified) {
       return res.status(409).send({
-        msg: "Email already verified",
-        success: "false",
+        message: "Email already verified",
+        response:{success: false},
       });
     }
     if (user) {
@@ -153,23 +153,22 @@ const verifyEmail = async (req, res) => {
 
 
         return res.status(200).send({
-          status: 200,
-          msg: "Email verified successful. Now you can login",
-          success: true,
+          message: "Email verified successful. Now you can login",
+          response:{success: true},
         });
       } catch (error) {
 
         return res.status(400).send({
-          success: false,
-          msg: "Ooops, something went wrong - Verification failed",
+          response:{success: false},
+          message: "Ooops, something went wrong - Verification failed",
         });
       }
     }
   } catch (error) {
     // console.log("Error", error);
     return res.status(500).send({
-      success: false,
-      msg: "Ooops, something went wrong - Verification failed",
+      response:{success: false},
+      message: "Ooops, something went wrong - Verification failed",
     });
   }
 };
@@ -182,14 +181,14 @@ const userLogin = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .send({ msg: `${email} is not a user`, success: false });
+        .send({ message: `${email} is not a user`,response:{ success: false} });
     }
     let UserCredentials = await UserCredential.findOne({ user: user._id });
 
     if (!user.is_email_verified) {
       return res.status(401).send({
-        msg: "Email not verified, please check your email for verification",
-        success: false,
+        message: "Email not verified, please check your email for verification",
+        response:{success: false},
       });
     }
 
@@ -199,9 +198,8 @@ const userLogin = async (req, res) => {
       async (_, response) => {
         if (response) {
           return res.status(200).send({
-            status: 200,
-            msg: "Successfully logged in",
-            data: {
+            message: "Successfully logged in",
+            response: {
               userDetails: user,
               token: jwt.sign(
                 {
@@ -216,16 +214,16 @@ const userLogin = async (req, res) => {
           });
         } else {
           return res.status(401).send({
-            msg: "Password is incorrect",
-            success: false,
+            message: "Password is incorrect",
+            response:{success: false},
           });
         }
       }
     );
   } catch (error) {
     return res.status(500).send({
-      success: false,
-      msg: error.message,
+      response:{success: false},
+      message: error.message,
     });
   }
 };
