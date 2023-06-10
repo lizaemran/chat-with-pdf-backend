@@ -115,12 +115,9 @@ const userRegister = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     let code = req.params.token
-    const userCredentials = await UserCredential.findOne(
-      {
+    const userCredentials = await UserCredential.findOne({
         sms_and_email_auth_token: code,
-      },
-      { user: 1 }
-    );
+      });
     if (!userCredentials) {
       return res.status(400).send({
         message: "Invalid Auth Code, verification failed",
@@ -172,6 +169,8 @@ const verifyEmail = async (req, res) => {
     });
   }
 };
+
+
 
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
