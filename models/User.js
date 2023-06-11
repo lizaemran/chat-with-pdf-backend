@@ -28,9 +28,13 @@ const UserSchema = new mongoose.Schema({
   },
   no_of_files:{
     type:Number,
+    default: 0,
+
   },
   no_of_questions:{
     type:Number,
+    default: 0,
+
   },
   createdAt: {
     type:Number,

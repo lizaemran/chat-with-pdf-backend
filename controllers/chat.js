@@ -172,7 +172,7 @@ let upload = async (req, res) => {
         title: req.files.file.name,
         messages: allMessages
       })
-      userDtails.no_of_files += 1;
+      userDtails.no_of_files = 1;
       await userDtails.save();
       return res
         .status(200)
