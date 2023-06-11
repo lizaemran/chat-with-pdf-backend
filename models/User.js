@@ -26,6 +26,12 @@ const UserSchema = new mongoose.Schema({
   plus_expiry:{
     type:Number,
   },
+  no_of_files:{
+    type:Number,
+  },
+  no_of_questions:{
+    type:Number,
+  },
   createdAt: {
     type:Number,
     default:Date.now()

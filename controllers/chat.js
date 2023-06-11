@@ -42,7 +42,8 @@ let chat = async (req, res) => {
 
     chat.messages = [...chat.messages,{role: "user", content: message},response.data.choices[0].message]
     await chat.save();
-    
+    userDtails.no_of_questions += 1;
+    await userDtails.save();
     return res
       .status(200)
       .json({ message: "Success", response: response.data.choices[0].message });
@@ -171,6 +172,8 @@ let upload = async (req, res) => {
         title: req.files.file.name,
         messages: allMessages
       })
+      userDtails.no_of_files += 1;
+      await userDtails.save();
       return res
         .status(200)
         .json({ message: "Success" ,response: {}});
