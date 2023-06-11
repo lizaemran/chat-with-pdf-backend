@@ -8,7 +8,7 @@ const { payments } = require("../controllers/payment");
 router.post("/userRegister", userRegister);
 router.get("/verifyEmail/:token", verifyEmail);
 router.post("/userLogin", userLogin);
-router.get("/isUserPlus/:email", isAuthenticated,isUserPlus);
+router.get("/isUserPlus", isAuthenticated,isUserPlus);
 
 router.post("/upload", isAuthenticated,upload);
 router.post("/chat", isAuthenticated,chat);
