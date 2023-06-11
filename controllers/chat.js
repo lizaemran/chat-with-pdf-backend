@@ -134,6 +134,7 @@ let upload = async (req, res) => {
           .json({ message: "No file uploaded.", response: {} });
       }
       let arr = req.files.file.name.split(".");
+      console.log(arr)
       let data;
       if (arr[1] == "xlsx" || arr[1] == "xls") {
         // convert xls to json
@@ -145,7 +146,6 @@ let upload = async (req, res) => {
         data = await pdfParse(req.files.file);
         data = data.text;
       } else if (arr[1] == "doc" || arr[1] == "docx") {
-        console.log("req.files.file.",req.files.file)
         // Extract text from the document
         let result= await mammoth.extractRawText({buffer:req.files.file.data})
             data = result.value;
