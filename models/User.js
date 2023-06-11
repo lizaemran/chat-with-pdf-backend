@@ -42,10 +42,8 @@ const UserCredentialsSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  sms_and_email_auth_token: {
-    
+  sms_and_email_auth_token: {    
     type: String,
-    // default: "sms_and_email_auth_token",
   },
   password: {
     type: String,

@@ -172,6 +172,8 @@ const verifyEmail = async (req, res) => {
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
+    if(!email) return res.status(401).send({message:"please enter your email" ,response:"email not provided"})
+    if(!password) return res.status(401).send({message:"please enter your password" ,response:"password not provided"})
     //See if User Exists
     let user = await User.findOne({ email: req.body.email });
     if (!user) {
@@ -179,8 +181,7 @@ const userLogin = async (req, res) => {
         .status(400)
         .send({ message: `${email} is not a user`,response:{ success: false} });
     }
-    let UserCredentials = await UserCredential.findOne({ user: user._id });
-
+    
     if (!user.is_email_verified) {
       return res.status(401).send({
         message: "Email not verified, please check your email for verification",
@@ -188,6 +189,14 @@ const userLogin = async (req, res) => {
       });
     }
 
+    let UserCredentials = await UserCredential.findOne({ user: user._id });
+    
+    if (!UserCredentials) {
+      return res
+        .status(400)
+        .send({ message: "user credentials data not found",response:{ success: false} });
+    }
+    
     bcrypt.compare(
       password,
       UserCredentials.password,
@@ -225,8 +234,30 @@ const userLogin = async (req, res) => {
 };
 
 
+const isUserPlus = async(req,res)=>{
+try{
+  let userData = await User.findOne({ email: req.user.email });
+
+  if (!userData) {
+    return res
+      .status(400)
+      .send({ message: `${email} is not a user`,response:{ success: false} });
+  }
+  return res
+  .status(200)
+  .send({ message: "user data found",response:{is_user_plus:userData.is_user_plus,plus_expiry:userData.plus_expiry} });
+
+}catch(err){
+  return res.status(500).send({
+    response:{success: false},
+    message: err.message,
+  });
+}
+}
+
 module.exports = {
   userRegister,
   userLogin,
+  isUserPlus,
   verifyEmail,
 };
