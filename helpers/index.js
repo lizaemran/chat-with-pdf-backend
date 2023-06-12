@@ -5,7 +5,7 @@ let transporter = nodeMailer.createTransport({
   host: "smtp.privateemail.com", // your SMTP server address
   port: 587,
   secure: false, // true for 465, false for other ports
- 
+ from:process.env.EMAIL,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
