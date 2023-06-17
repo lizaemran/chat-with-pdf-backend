@@ -170,7 +170,9 @@ let upload = async (req, res) => {
       await Chat.create({
         userId: req.user.id,
         title: req.files.file.name,
-        messages: allMessages
+        messages: allMessages,
+        createdAt:Date.now(),
+        updatedAt:Date.now()
       })
       userDtails.no_of_files = 1;
       await userDtails.save();

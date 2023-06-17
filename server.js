@@ -6,9 +6,11 @@ const routes = require("./routes")
 const app = express();
 const port = process.env.PORT
 const database = require('./utils/connection');
+const morgan = require('morgan');
 
 
 
+app.use(morgan('combined'));
 
 // Enable cors
 app.use(cors({
