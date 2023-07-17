@@ -88,6 +88,7 @@ let openChat = async (req, res) => {
       messages
     });
     
+    
     return res
       .status(200)
       .json({ message: "Success", response: response.data.choices[0].message });

@@ -62,7 +62,7 @@ const userRegister = async (req, res) => {
 
       const url = `https://backend-chat-any-file.vercel.app/api/verifyEmail/${encryptedToken}`;
       const output = `Hi ${req.body.fname},
-      <br/> Thanks for registering! <br/><br/> 
+      <br/> Thanks for registering! We are happy to have you<br/><br/>  
       Please <a href=${url}>Click Here</a> to verify your email address
        <br/><br/> If it was not you, please ignore this email`;
       let mailOptions = {
