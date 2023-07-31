@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
-
+const fs = require("fs");
 const pdfParse = require("pdf-parse"); // for pdf
 const xlsx = require("xlsx"); // for excel
 const mammoth = require('mammoth'); //// for doc
@@ -169,10 +169,16 @@ let upload = async (req, res) => {
       console.log(arr)
       let data;
       if (arr[1] == "xlsx" || arr[1] == "xls") {
+        console.log("in")
         // convert xls to json
         let wb = xlsx.read(req.files.file.data);
         let jsonData = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
         data = JSON.stringify(jsonData);
+        fs.appendFile("./demo1.json",data, function (err) {
+          if (err) throw err;
+          console.log('Saved!');
+        })
+        return
       } else if (arr[1] == "pdf") {
         // convert pdf to string
         data = await pdfParse(req.files.file);
