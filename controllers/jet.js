@@ -74,7 +74,7 @@ exports.getAllJetInfo = async (req,res)=>{
             headers: {
                 'content-type': 'text/html;charset=UTF-8',
                 vary: 'Accept-Encoding',
-                'X-RapidAPI-Key': 'ac70e40e4cmsh885699f7b4ffc9ep1ce53fjsn763cc224c3a6',
+                'X-RapidAPI-Key': 'b26b857bf3mshfcfa1bf903d5e8ap18811fjsnf79559acbe26',
                 'X-RapidAPI-Host': 'greatcirclemapper.p.rapidapi.com'
             }
         };
