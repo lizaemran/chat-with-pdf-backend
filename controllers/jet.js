@@ -3,6 +3,19 @@ exports.getAllJetInfo = async (req,res)=>{
     try{
     let from = req.params.from;
     let to = req.params.to;
+    let tourType = req.params.tourType;
+    if(!from) return  res.status(403).json({
+        data:"",
+        error:"please provide from"
+    })
+    if(!to) return  res.status(403).json({
+        data:"",
+        error:"please provide to"
+    })
+    if(!tourType) return res.status(403).json({
+        data:"",
+        error:"please provide tourType"
+    })
     let speedArr =[304.142,347.59,391.039,434.488,456.213,456.213]
     let jetInfo = [
         {
@@ -82,7 +95,13 @@ exports.getAllJetInfo = async (req,res)=>{
         
         console.log("-->",response.data.totals.flight_time_min);
         jetInfo[index].time = response.data.totals.flight_time_min/60
-        jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time
+        if(tourType == "roundTrip"){
+            jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time
+            jetInfo[index].cost *= 2;
+
+        }else if(tourType == "oneWay"){
+            jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time
+        }
     }))
     
         res.status(200).json({
