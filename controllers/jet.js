@@ -17,6 +17,7 @@ exports.getAllJetInfo = async (req,res)=>{
         error:"please provide tourType"
     })
     let speedArr =[304.142,347.59,391.039,434.488,456.213,456.213]
+ 
     let jetInfo = [
         {
             type:"Turbo prop",
@@ -25,7 +26,8 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:304.142,
             time:0,
             cost:0,
-            img:"https://media-content.avinode.com/mediafiles/store/10001/132088879730609645_26.jpg"
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop-int.jpeg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop_-etx.jpeg",
         },
         {
             type:"Very light jet",
@@ -34,7 +36,8 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:347.59,
             time:0,
             cost:0,
-            img:"https://www.evojets.com/wp-content/themes/evojets-child/thinkcode/aircraft-illustrations/heavy_jet.png?123"
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-int.jpg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-ext.png"
 
         },
         {
@@ -44,7 +47,8 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:391.039,
             time:0,
             cost:0,
-            img:"https://media-content.avinode.com/mediafiles/store/7/636440938464576582_26.JPG"
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-int.jpeg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-ext.jpeg"
 
         },
         {
@@ -54,8 +58,8 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:434.488,
             time:0,
             cost:0,
-            img:"https://media-content.avinode.com/mediafiles/store/8714/636536970758776984_26.jpg"
-
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-int.jpeg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-ext.jpeg"
         },
         {
             type:"Super midsize jet",
@@ -64,7 +68,9 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:456.213,
             time:0,
             cost:0,
-            img:"https://media-content.avinode.com/mediafiles/store/458/636863379282405125_26.jpg"
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-int.jpeg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-ext.jpeg"
+
 
         },
         {
@@ -74,7 +80,8 @@ exports.getAllJetInfo = async (req,res)=>{
             speed:456.213,
             time:0,
             cost:0,
-            img:"https://media-content.avinode.com/mediafiles/store/11401/637556466165685226.jpg"
+            img1:"https://jetlevel.com/wp-content/uploads/2023/08/heavy-int.jpeg",
+            img2:"https://jetlevel.com/wp-content/uploads/2023/08/heavy-ext.jpeg"
 
         },
     ]
