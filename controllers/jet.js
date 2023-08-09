@@ -1,6 +1,6 @@
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
-  try {
+  
     let from = req.params.from;
     let to = req.params.to;
     let tourType = req.params.tourType;
@@ -110,8 +110,8 @@ exports.getAllJetInfo = async (req, res) => {
 
     await Promise.all(
       jetInfo.map(async (item, index) => {
-        let distance = calculateDistance(lat1, lon1, lat2, lon2);
-        let timeInHours = item.speed * distance;
+        let distance = await calculateDistance(lat1, lon1, lat2, lon2);
+        let timeInHours =  distance/item.speed;
         jetInfo[index].time = timeInHours;
         if (tourType == "roundTrip") {
           jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time;
@@ -125,17 +125,13 @@ exports.getAllJetInfo = async (req, res) => {
     res.status(200).json({
       data: jetInfo,
     });
-  } catch (e) {
-    res.status(500).json({
-        error:"internal server error"
-      });
-  }
+  
 };
-
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  Number.prototype.toRad = function () {
-    return (this * Math.PI) / 180;
+function toRad (num) {
+    return (num * Math.PI) / 180;
   };
+async function calculateDistance(lat1, lon1, lat2, lon2) {
+ 
 
   // var lat2 = 40.642334;
   // var lon2 = -73.78817;
@@ -145,13 +141,13 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   var R = 6371; // km
   //has a problem with the .toRad() method below.
   var x1 = lat2 - lat1;
-  var dLat = x1.toRad();
+  var dLat = toRad(x1);
   var x2 = lon2 - lon1;
-  var dLon = x2.toRad();
+  var dLon = toRad(x2);
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1.toRad()) *
-      Math.cos(lat2.toRad()) *
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
