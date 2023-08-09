@@ -21,7 +21,7 @@ router.post("/payments", isAuthenticated,payments);
 
 
 
-router.get("/getAllJetInfo/:from?/:to?/:tourType?",getAllJetInfo);
+router.get("/getAllJetInfo/:from?/:to?/:tourType?/:lat1?/:lon1?/:lat2?/:lon2?",getAllJetInfo);
 
 
 
