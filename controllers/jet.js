@@ -1,137 +1,153 @@
+let { Airport } = require("../models/Airport");
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
-  
-    let from = req.params.from;
-    let to = req.params.to;
-    let tourType = req.params.tourType;
-    let lat1 = req.params.lat1;
-    let lon1 = req.params.lon1;
-    let lat2 = req.params.lat2;
-    let lon2 = req.params.lon2;
+  let from = req.params.fromLocation;
+  let to = req.params.to;
+  let tourType = req.params.tourType;
+  // let lat1 = req.params.lat1;
+  // let lon1 = req.params.lon1;
+  // let lat2 = req.params.lat2;
+  // let lon2 = req.params.lon2;
 
-    if (!from)
-      return res.status(403).json({
-        data: "",
-        error: "please provide from",
-      });
-    if (!to)
-      return res.status(403).json({
-        data: "",
-        error: "please provide to",
-      });
-    if (!tourType)
-      return res.status(403).json({
-        data: "",
-        error: "please provide tourType",
-      });
-    if (!lat1)
-      return res.status(403).json({
-        data: "",
-        error: "please provide lat1",
-      });
-    if (!lon1)
-      return res.status(403).json({
-        data: "",
-        error: "please provide log1",
-      });
-    if (!lat2)
-      return res.status(403).json({
-        data: "",
-        error: "please provide log2",
-      });
-    if (!lon2)
-      return res.status(403).json({
-        data: "",
-        error: "please provide log2",
-      });
-
-    let jetInfo = [
-      {
-        type: "Turbo prop",
-        rate: 4900,
-        capacity: "6-8",
-        speed: 643.738, //kph
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop-int.jpeg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop_-etx.jpeg",
-      },
-      {
-        type: "Very light jet",
-        rate: 5400,
-        capacity: "4-5",
-        speed: 643.738,
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-int.jpg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-ext.png",
-      },
-      {
-        type: "Light jet",
-        rate: 6900,
-        capacity: "6-8",
-        speed: 724.205,
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-int.jpeg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-ext.jpeg",
-      },
-      {
-        type: "Mid size jet",
-        rate: 7900,
-        capacity: "7-9",
-        speed: 804.672,
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-int.jpeg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-ext.jpeg",
-      },
-      {
-        type: "Super midsize jet",
-        rate: 9000,
-        capacity: "8-10",
-        speed: 844.906,
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-int.jpeg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-ext.jpeg",
-      },
-      {
-        type: "Heavy jet",
-        rate: 11000,
-        capacity: "10-16",
-        speed: 844.906,
-        time: 0,
-        cost: 0,
-        img2: "https://jetlevel.com/wp-content/uploads/2023/08/heavy-int.jpeg",
-        img1: "https://jetlevel.com/wp-content/uploads/2023/08/heavy-ext.jpeg",
-      },
-    ];
-
-    await Promise.all(
-      jetInfo.map(async (item, index) => {
-        let distance = await calculateDistance(lat1, lon1, lat2, lon2);
-        let timeInHours =  distance/item.speed;
-        jetInfo[index].time = timeInHours;
-        if (tourType == "roundTrip") {
-          jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time;
-          jetInfo[index].cost *= 2;
-        } else if (tourType == "oneWay") {
-          jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time;
-        }
-      })
-    );
-
-    res.status(200).json({
-      data: jetInfo,
+  if (!from)
+    return res.status(403).json({
+      data: "",
+      error: "please provide from",
     });
-  
+  if (!to)
+    return res.status(403).json({
+      data: "",
+      error: "please provide to",
+    });
+  if (!tourType)
+    return res.status(403).json({
+      data: "",
+      error: "please provide tourType",
+    });
+  // if (!lat1)
+  //   return res.status(403).json({
+  //     data: "",
+  //     error: "please provide lat1",
+  //   });
+  // if (!lon1)
+  //   return res.status(403).json({
+  //     data: "",
+  //     error: "please provide log1",
+  //   });
+  // if (!lat2)
+  //   return res.status(403).json({
+  //     data: "",
+  //     error: "please provide log2",
+  //   });
+  // if (!lon2)
+  //   return res.status(403).json({
+  //     data: "",
+  //     error: "please provide log2",
+  //   });
+
+  let jetInfo = [
+    {
+      type: "Turbo prop",
+      rate: 4900,
+      capacity: "6-8",
+      speed: 643.738, //kph
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop-int.jpeg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/Turbo_prop_-etx.jpeg",
+    },
+    {
+      type: "Very light jet",
+      rate: 5400,
+      capacity: "4-5",
+      speed: 643.738,
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-int.jpg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/very-light-jet-ext.png",
+    },
+    {
+      type: "Light jet",
+      rate: 6900,
+      capacity: "6-8",
+      speed: 724.205,
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-int.jpeg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/Light_jet-ext.jpeg",
+    },
+    {
+      type: "Mid size jet",
+      rate: 7900,
+      capacity: "7-9",
+      speed: 804.672,
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-int.jpeg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/Midsize_jet-ext.jpeg",
+    },
+    {
+      type: "Super midsize jet",
+      rate: 9000,
+      capacity: "8-10",
+      speed: 844.906,
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-int.jpeg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/Super-midsize-ext.jpeg",
+    },
+    {
+      type: "Heavy jet",
+      rate: 11000,
+      capacity: "10-16",
+      speed: 844.906,
+      time: 0,
+      cost: 0,
+      img2: "https://jetlevel.com/wp-content/uploads/2023/08/heavy-int.jpeg",
+      img1: "https://jetlevel.com/wp-content/uploads/2023/08/heavy-ext.jpeg",
+    },
+  ];
+  let search = await Airport.findOne({
+    codeIcaoAirport: { $regex: `${from}`, $options: "i" },
+  });
+
+  let search1 = await Airport.findOne({
+    codeIcaoAirport: { $regex: `${to}`, $options: "i" },
+  });
+
+  const numericValue1 = parseFloat(search.latitudeAirport.replace(/,/g, "."));
+  const numericValue2 = parseFloat(search.longitudeAirport.replace(/,/g, "."));
+  const numericValue3 = parseFloat(search1.latitudeAirport.replace(/,/g, "."));
+  const numericValue4 = parseFloat(search1.longitudeAirport.replace(/,/g, "."));
+
+  let distance = await calculateDistance(
+    numericValue1,
+    numericValue2,
+    numericValue3,
+    numericValue4
+  );
+  await Promise.all(
+    jetInfo.map(async (item, index) => {
+     
+      let timeInHours = distance / item.speed;
+      jetInfo[index].time = timeInHours;
+      if (tourType == "roundTrip") {
+        jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time;
+        jetInfo[index].cost *= 2;
+      } else if (tourType == "oneWay") {
+        jetInfo[index].cost = jetInfo[index].rate * jetInfo[index].time;
+      }
+    })
+  );
+
+  res.status(200).json({
+    data: jetInfo,
+  });
 };
-function toRad (num) {
-    return (num * Math.PI) / 180;
-  };
+function toRad(num) {
+  return (num * Math.PI) / 180;
+}
 async function calculateDistance(lat1, lon1, lat2, lon2) {
- 
 
   // var lat2 = 40.642334;
   // var lon2 = -73.78817;
@@ -156,3 +172,27 @@ async function calculateDistance(lat1, lon1, lat2, lon2) {
   console.log(d);
   return d;
 }
+
+exports.search = async (req, res) => {
+  try {
+    let input = req.query.query;
+    //    ['codeIataAirport', 'codeIataCity','nameAirport', 'codeIso2Country', 'codeIcaoAirport','nameCountry','nameTranslations','timezone']:
+
+    let search = await Airport.find({
+      $or: [
+        { codeIataAirport: { $regex: input, $options: "i" } },
+        { codeIataCity: { $regex: input, $options: "i" } },
+        { nameAirport: { $regex: input, $options: "i" } },
+        { codeIso2Country: { $regex: input, $options: "i" } },
+        { codeIcaoAirport: { $regex: input, $options: "i" } },
+        { nameCountry: { $regex: input, $options: "i" } },
+        { nameTranslations: { $regex: input, $options: "i" } },
+        { timezone: { $regex: input, $options: "i" } },
+      ],
+    });
+    res.send(search);
+  } catch (err) {
+    console.log(err);
+    res.send({ err: err });
+  }
+};

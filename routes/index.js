@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { chat,openChat, deleteChat,upload,getAllChats } = require("../controllers/chat");
 const { userRegister, userLogin, verifyEmail ,isUserPlus} = require("../controllers/user");
-const { getAllJetInfo} = require("../controllers/jet");
+const { getAllJetInfo,search} = require("../controllers/jet");
 const {isAuthenticated} = require("../middleware");
 const { payments } = require("../controllers/payment");
 
@@ -21,9 +21,9 @@ router.post("/payments", isAuthenticated,payments);
 
 
 
-router.get("/getAllJetInfo/:from?/:to?/:tourType?/:lat1?/:lon1?/:lat2?/:lon2?",getAllJetInfo);
+router.get("/getAllJetInfo/:fromLocation?/:to?/:tourType?",getAllJetInfo);
 
 
-
+router.get("/search",search)
 
 module.exports = router;
