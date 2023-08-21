@@ -28,21 +28,21 @@ let chat = async (req, res) => {
     }
     let userDtails = await User.findOne({_id:req.user.id})
     if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
-    if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
-      if(!userDtails.is_user_plus && userDtails.no_of_questions == 3){
-        return res
-        .status(400)
-        .json({ message: "Daily limit reached", response: {} });
-      }else{
-        if(userDtails.is_user_plus && userDtails.no_of_questions == 1000){
-          return res
-          .status(400)
-          .json({ message: "Daily limit reached", response: {} });
-        }    
-      }    
-    }else{
-      userDtails.no_of_questions = 0
-    }
+    // if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
+    //   if(!userDtails.is_user_plus && userDtails.no_of_questions == 3){
+    //     return res
+    //     .status(400)
+    //     .json({ message: "Daily limit reached", response: {} });
+    //   }else{
+    //     if(userDtails.is_user_plus && userDtails.no_of_questions == 1000){
+    //       return res
+    //       .status(400)
+    //       .json({ message: "Daily limit reached", response: {} });
+    //     }    
+    //   }    
+    // }else{
+    //   userDtails.no_of_questions = 0
+    // }
     let chat  = await Chat.findOne({_id,userId:req.user.id})
     if(!chat) {
       return res
@@ -144,21 +144,21 @@ let upload = async (req, res) => {
     try {
       let userDtails = await User.findOne({_id:req.user.id})
       if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
-      if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
-        if(!userDtails.is_user_plus && userDtails.no_of_files == 3){
-          return res
-          .status(400)
-          .json({ message: "Daily limit reached", response: {} });
-        }else{
-          if(userDtails.is_user_plus && userDtails.no_of_files == 50){
-            return res
-            .status(400)
-            .json({ message: "Daily limit reached", response: {} });
-          }    
-        }    
-      }else{
-        userDtails.no_of_files = 0
-      }
+      // if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
+      //   if(!userDtails.is_user_plus && userDtails.no_of_files == 3){
+      //     return res
+      //     .status(400)
+      //     .json({ message: "Daily limit reached", response: {} });
+      //   }else{
+      //     if(userDtails.is_user_plus && userDtails.no_of_files == 50){
+      //       return res
+      //       .status(400)
+      //       .json({ message: "Daily limit reached", response: {} });
+      //     }    
+      //   }    
+      // }else{
+      //   userDtails.no_of_files = 0
+      // }
       // Check if file was uploaded
       if (!req.files.file) {
         return res
