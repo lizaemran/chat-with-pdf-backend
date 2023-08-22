@@ -204,22 +204,9 @@ exports.search = async (req, res) => {
         },
       }).limit(5);
 
-      let combinedResults = search.concat(nearBy);
+      search = nearBy;
 
-      // Create a map to track unique objects based on _id
-      const uniqueMap = new Map();
-
-      // Iterate through the combined results and remove duplicates based on _id
-      for (const obj of combinedResults) {
-        if (!uniqueMap.has(obj._id)) {
-          uniqueMap.set(obj._id, obj);
-        }
-      }
-
-      // Convert the map values back to an array (removing duplicates)
-      const deduplicatedArray = Array.from(uniqueMap.values());
-
-      search = deduplicatedArray;
+      
     }
 
     res.send({ search });
