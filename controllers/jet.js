@@ -182,11 +182,11 @@ exports.search = async (req, res) => {
         $or: [
           { codeIataCity: { $regex: input, $options: "i" } },
           { codeIataAirport: { $regex: input, $options: "i" } },
-          { codeIso2Country: { $regex: input, $options: "i" } },
           { codeIcaoAirport: { $regex: input, $options: "i" } },
           { nameAirport: { $regex: input, $options: "i" } },
+          { nameTranslations: { $regex: input, $options: "i" } },
+          { codeIso2Country: { $regex: input, $options: "i" } },
           { nameCountry: { $regex: input, $options: "i" } },
-          { nameTranslations: { $regex: input, $options: "i" } }
         ],
       });
 
@@ -201,9 +201,17 @@ exports.search = async (req, res) => {
             // $maxDistance: 5000
           },
         },
-      }).limit(10);
+      }).limit(5);
+      let arr =[]
+      for(let i of search){
+        for(let j of nearBy){
+          if(i != j){
+            arr.push(j)
+          }
+        }
+      }
 
-      search = nearBy;
+      search = [...search,...arr];
 
       
     }
