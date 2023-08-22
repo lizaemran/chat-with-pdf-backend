@@ -1,4 +1,5 @@
 let { Airport } = require("../models/Airport");
+let mongoose = require("mongoose");
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
   let from = req.params.fromLocation;
@@ -128,7 +129,6 @@ exports.getAllJetInfo = async (req, res) => {
   );
   await Promise.all(
     jetInfo.map(async (item, index) => {
-     
       let timeInHours = distance / item.speed;
       jetInfo[index].time = timeInHours;
       if (tourType == "roundTrip") {
@@ -148,7 +148,6 @@ function toRad(num) {
   return (num * Math.PI) / 180;
 }
 async function calculateDistance(lat1, lon1, lat2, lon2) {
-
   // var lat2 = 40.642334;
   // var lon2 = -73.78817;
   // var lat1 = 28.432177;
@@ -177,22 +176,137 @@ exports.search = async (req, res) => {
   try {
     let input = req.query.query;
     //    ['codeIataAirport', 'codeIataCity','nameAirport', 'codeIso2Country', 'codeIcaoAirport','nameCountry','nameTranslations','timezone']:
+    let search = [];
+    if (input.length >= 3) {
+      search = await Airport.find({
+        $or: [
+          { codeIataAirport: { $regex: input, $options: "i" } },
+          { codeIataCity: { $regex: input, $options: "i" } },
+          { nameAirport: { $regex: input, $options: "i" } },
+          { codeIso2Country: { $regex: input, $options: "i" } },
+          { codeIcaoAirport: { $regex: input, $options: "i" } },
+          { nameCountry: { $regex: input, $options: "i" } },
+          { nameTranslations: { $regex: input, $options: "i" } },
+          { timezone: { $regex: input, $options: "i" } },
+        ],
+      });
 
-    let search = await Airport.find({
-      $or: [
-        { codeIataAirport: { $regex: input, $options: "i" } },
-        { codeIataCity: { $regex: input, $options: "i" } },
-        { nameAirport: { $regex: input, $options: "i" } },
-        { codeIso2Country: { $regex: input, $options: "i" } },
-        { codeIcaoAirport: { $regex: input, $options: "i" } },
-        { nameCountry: { $regex: input, $options: "i" } },
-        { nameTranslations: { $regex: input, $options: "i" } },
-        { timezone: { $regex: input, $options: "i" } },
-      ],
-    });
-    res.send(search);
+      let nearBy = await Airport.find({
+        loc: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [search[0].loc.lon, search[0].loc.lat],
+            },
+            // $minDistance: 1000,
+            // $maxDistance: 5000
+          },
+        },
+      }).limit(5);
+
+      let combinedResults = search.concat(nearBy);
+
+      // Create a map to track unique objects based on _id
+      const uniqueMap = new Map();
+
+      // Iterate through the combined results and remove duplicates based on _id
+      for (const obj of combinedResults) {
+        if (!uniqueMap.has(obj._id)) {
+          uniqueMap.set(obj._id, obj);
+        }
+      }
+
+      // Convert the map values back to an array (removing duplicates)
+      const deduplicatedArray = Array.from(uniqueMap.values());
+
+      search = deduplicatedArray;
+    }
+
+    res.send({ search });
   } catch (err) {
     console.log(err);
     res.send({ err: err });
   }
 };
+
+exports.update = async (req, res) => {
+  try {
+    await Airport.updateMany({}, [
+      {
+        $set: {
+          loc: {
+            lon: {
+              $toDouble: {
+                $replaceOne: {
+                  input: "$longitudeAirport",
+                  find: ",",
+                  replacement: ".",
+                },
+              },
+            },
+
+            lat: {
+              $toDouble: {
+                $replaceOne: {
+                  input: "$latitudeAirport",
+                  find: ",",
+                  replacement: ".",
+                },
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    //   await Airport.updateMany({},[
+    //         {
+    //           $set: {
+    //     location: { type: "Point", coordinates: [ "$latitudeAirport", "$longitudeAirport" ] },
+    //           }
+    // }])
+    return res.send("done");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
+ [
+  {
+    $addFields: {
+      longitudeAirport: {
+        $toDouble: {
+          $replaceOne: {
+            input: "$longitudeAirport",
+            find: ",",
+            replacement: ".",
+          },
+        },
+      },
+      latitudeAirport: {
+        $toDouble: {
+          $replaceOne: {
+            input: "$latitudeAirport",
+            find: ",",
+            replacement: ".",
+          },
+        },
+      },
+    },
+  },
+  {
+    $geoNear:
+     
+      {
+        near: {
+          type: "Point",
+          coordinates: [-17.05, -145.41667],
+        },
+        distanceField: "string",
+        maxDistance: 10000,
+        spherical: true,
+      },
+  },
+]
+ */

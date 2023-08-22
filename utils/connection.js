@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const { mongo } = require('../config/environment');
 function getConnection() {
-  mongoose.connect(mongo.db_url,mongo.options).then(()=>{
+  mongoose.connect(mongo.db_url,mongo.options)
+  mongoose.connection.on('connected', () =>{
+  
     console.log("db connected")
-  }).catch(err =>{
+  })
+  mongoose.connection.on('error', (err) => {
     console.log("Error",err)
   })
-
 }
 
 

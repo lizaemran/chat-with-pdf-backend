@@ -7,8 +7,16 @@ const AirportSchema = new mongoose.Schema({
     codeIso2Country: String,
     codeIcaoAirport: String,
     codeIataCity: String,
-    latitudeAirport: String,
-    longitudeAirport: String,
+    latitudeAirport: Number,
+    longitudeAirport: Number,
+    loc:{
+      "lon" : {
+        type:Number,
+      },
+      "lat" : {
+        type:Number,
+      }
+    },
     timezone: String,
     GMT: Number,
     isRailRoad: Number,
