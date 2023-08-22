@@ -180,14 +180,13 @@ exports.search = async (req, res) => {
     if (input.length >= 3) {
       search = await Airport.find({
         $or: [
-          { codeIataAirport: { $regex: input, $options: "i" } },
           { codeIataCity: { $regex: input, $options: "i" } },
-          { nameAirport: { $regex: input, $options: "i" } },
+          { codeIataAirport: { $regex: input, $options: "i" } },
           { codeIso2Country: { $regex: input, $options: "i" } },
           { codeIcaoAirport: { $regex: input, $options: "i" } },
+          { nameAirport: { $regex: input, $options: "i" } },
           { nameCountry: { $regex: input, $options: "i" } },
-          { nameTranslations: { $regex: input, $options: "i" } },
-          { timezone: { $regex: input, $options: "i" } },
+          { nameTranslations: { $regex: input, $options: "i" } }
         ],
       });
 
@@ -202,7 +201,7 @@ exports.search = async (req, res) => {
             // $maxDistance: 5000
           },
         },
-      }).limit(5);
+      }).limit(10);
 
       search = nearBy;
 
