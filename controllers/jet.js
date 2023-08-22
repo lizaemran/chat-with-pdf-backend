@@ -116,10 +116,10 @@ exports.getAllJetInfo = async (req, res) => {
     codeIcaoAirport: { $regex: `${to}`, $options: "i" },
   });
 
-  const numericValue1 = parseFloat(search.latitudeAirport.replace(/,/g, "."));
-  const numericValue2 = parseFloat(search.longitudeAirport.replace(/,/g, "."));
-  const numericValue3 = parseFloat(search1.latitudeAirport.replace(/,/g, "."));
-  const numericValue4 = parseFloat(search1.longitudeAirport.replace(/,/g, "."));
+  const numericValue1 = search.latitudeAirport
+  const numericValue2 = search.longitudeAirport
+  const numericValue3 = search1.latitudeAirport
+  const numericValue4 = search1.longitudeAirport
 
   let distance = await calculateDistance(
     numericValue1,
