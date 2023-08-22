@@ -1,5 +1,5 @@
 let { Airport } = require("../models/Airport");
-let mongoose = require("mongoose");
+// let mongoose = require("mongoose");
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
   let from = req.params.fromLocation;
@@ -229,84 +229,3 @@ exports.search = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
-  try {
-    await Airport.updateMany({}, [
-      {
-        $set: {
-          loc: {
-            lon: {
-              $toDouble: {
-                $replaceOne: {
-                  input: "$longitudeAirport",
-                  find: ",",
-                  replacement: ".",
-                },
-              },
-            },
-
-            lat: {
-              $toDouble: {
-                $replaceOne: {
-                  input: "$latitudeAirport",
-                  find: ",",
-                  replacement: ".",
-                },
-              },
-            },
-          },
-        },
-      },
-    ]);
-
-    //   await Airport.updateMany({},[
-    //         {
-    //           $set: {
-    //     location: { type: "Point", coordinates: [ "$latitudeAirport", "$longitudeAirport" ] },
-    //           }
-    // }])
-    return res.send("done");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/**
- [
-  {
-    $addFields: {
-      longitudeAirport: {
-        $toDouble: {
-          $replaceOne: {
-            input: "$longitudeAirport",
-            find: ",",
-            replacement: ".",
-          },
-        },
-      },
-      latitudeAirport: {
-        $toDouble: {
-          $replaceOne: {
-            input: "$latitudeAirport",
-            find: ",",
-            replacement: ".",
-          },
-        },
-      },
-    },
-  },
-  {
-    $geoNear:
-     
-      {
-        near: {
-          type: "Point",
-          coordinates: [-17.05, -145.41667],
-        },
-        distanceField: "string",
-        maxDistance: 10000,
-        spherical: true,
-      },
-  },
-]
- */

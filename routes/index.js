@@ -25,6 +25,6 @@ router.get("/getAllJetInfo/:fromLocation?/:to?/:tourType?",getAllJetInfo);
 
 
 router.get("/search",search)
-router.get("/update",update)
+// router.get("/update",update)
 
 module.exports = router;
