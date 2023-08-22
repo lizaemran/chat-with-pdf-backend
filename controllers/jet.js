@@ -175,7 +175,7 @@ async function calculateDistance(lat1, lon1, lat2, lon2) {
 exports.search = async (req, res) => {
   try {
     let input = req.query.query;
-    //    ['codeIataAirport', 'codeIataCity','nameAirport', 'codeIso2Country', 'codeIcaoAirport','nameCountry','nameTranslations','timezone']:
+    if(!input) return res.status(400).send({error:"please provide search query"})
     let search = [];
     if (input.length >= 3) {
       search = await Airport.find({
@@ -202,17 +202,12 @@ exports.search = async (req, res) => {
           },
         },
       }).limit(5);
-      let arr =[]
-      for(let i of search){
-        for(let j of nearBy){
-          if(i != j){
-            arr.push(j)
-          }
-        }
-      }
+  
 
-      search = [...search,...arr];
+      let mergedArray = search.concat(nearBy)
 
+      let newArray =  Array.from(new Set(mergedArray.map(JSON.stringify))).map(JSON.parse)
+      search = newArray
       
     }
 
