@@ -1,4 +1,5 @@
 let { Airport } = require("../models/Airport");
+let { Airport2 } = require("../models/Airport2");
 // let mongoose = require("mongoose");
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
@@ -116,10 +117,10 @@ exports.getAllJetInfo = async (req, res) => {
     codeIcaoAirport: { $regex: `${to}`, $options: "i" },
   });
 
-  const numericValue1 = search.latitudeAirport
-  const numericValue2 = search.longitudeAirport
-  const numericValue3 = search1.latitudeAirport
-  const numericValue4 = search1.longitudeAirport
+  const numericValue1 = search.loc.lat;
+  const numericValue2 = search.loc.lon;
+  const numericValue3 = search1.loc.lat
+  const numericValue4 = search1.loc.lon;
 
   let distance = await calculateDistance(
     numericValue1,
@@ -175,40 +176,42 @@ async function calculateDistance(lat1, lon1, lat2, lon2) {
 exports.search = async (req, res) => {
   try {
     let input = req.query.query;
-    if(!input) return res.status(400).send({error:"please provide search query"})
+    if (!input)
+      return res.status(400).send({ error: "please provide search query" });
     let search = [];
     if (input.length >= 3) {
-      search = await Airport.find({
+      search = await Airport2.find({
         $or: [
-          { codeIataCity: { $regex: input, $options: "i" } },
-          { codeIataAirport: { $regex: input, $options: "i" } },
           { codeIcaoAirport: { $regex: input, $options: "i" } },
+          { local_code: { $regex: input, $options: "i" } },
           { nameAirport: { $regex: input, $options: "i" } },
-          { nameTranslations: { $regex: input, $options: "i" } },
-          { codeIso2Country: { $regex: input, $options: "i" } },
-          { nameCountry: { $regex: input, $options: "i" } },
+          { iata_code: { $regex: input, $options: "i" } },
+          { local_code: { $regex: input, $options: "i" } },
+          { iso_region: { $regex: input, $options: "i" } },
+          { municipality: { $regex: input, $options: "i" } },
+          { keywords: { $regex: input, $options: "i" } },
         ],
-      });
-
-      let nearBy = await Airport.find({
-        loc: {
-          $near: {
-            $geometry: {
-              type: "Point",
-              coordinates: [search[0].loc.lon, search[0].loc.lat],
-            },
-            // $minDistance: 1000,
-            // $maxDistance: 5000
-          },
-        },
       }).limit(5);
-  
 
-      let mergedArray = search.concat(nearBy)
+      // let nearBy = await Airport2.find({
+      //   loc: {
+      //     $near: {
+      //       $geometry: {
+      //         type: "Point",
+      //         coordinates: [search[0].loc.lon, search[0].loc.lat],
+      //       },
+      //       // $minDistance: 1000,
+      //       // $maxDistance: 5000
+      //     },
+      //   },
+      // }).limit(5);
 
-      let newArray =  Array.from(new Set(mergedArray.map(JSON.stringify))).map(JSON.parse)
-      search = newArray
-      
+      // let mergedArray = search.concat(nearBy);
+
+      // let newArray = Array.from(new Set(mergedArray.map(JSON.stringify))).map(
+      //   JSON.parse
+      // );
+      // search = newArray;
     }
 
     res.send({ search });
@@ -218,3 +221,23 @@ exports.search = async (req, res) => {
   }
 };
 
+exports.update = async (req, res) => {
+  try {
+    await Airport2.updateMany({}, [
+      {
+        $set: {
+          loc: {
+            lon: "$longitudeAirport",
+
+            lat: "$latitudeAirport",
+          },
+        },
+      },
+    ]);
+
+
+    return res.send("done");
+  } catch (err) {
+    console.log(err);
+  }
+};
