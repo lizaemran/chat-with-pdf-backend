@@ -181,17 +181,10 @@ exports.search = async (req, res) => {
     let search = [];
     if (input.length >= 3) {
       search = await Airport2.find({
-        $or: [
-          { codeIcaoAirport: { $regex: input, $options: "i" } },
-          { local_code: { $regex: input, $options: "i" } },
-          { nameAirport: { $regex: input, $options: "i" } },
-          { iata_code: { $regex: input, $options: "i" } },
-          { local_code: { $regex: input, $options: "i" } },
-          { iso_region: { $regex: input, $options: "i" } },
-          { municipality: { $regex: input, $options: "i" } },
-          { keywords: { $regex: input, $options: "i" } },
-        ],
-      }).limit(5);
+       $text:{
+         $search:`\"${input}\"` 
+       },
+     }).limit(5)
 
       // let nearBy = await Airport2.find({
       //   loc: {
@@ -241,3 +234,4 @@ exports.update = async (req, res) => {
     console.log(err);
   }
 };
+
