@@ -295,6 +295,9 @@ exports.sendEmail = async(req,res)=>{
         <h4>Yourself</h4>
         <p>${data.youself}</p>
         `);    
+      }else{
+        templateContent = templateContent.replace("##EXTRA_PART##", "")
+
       }
       let mailOptions = {
         from: process.env.EMAIL, //Sender Address
