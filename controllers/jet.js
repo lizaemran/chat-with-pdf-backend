@@ -121,6 +121,7 @@ exports.getAllJetInfo = async (req, res) => {
 
   const numericValue1 = search.loc.lat;
   const numericValue2 = search.loc.lon;
+  
   const numericValue3 = search1.loc.lat
   const numericValue4 = search1.loc.lon;
 
@@ -266,21 +267,287 @@ exports.sendEmail = async(req,res)=>{
     }
     
 
-      let templatePath = "../mail_html_templates/inquiry_confirmation.html";
-      let templateContent = fs.readFileSync(templatePath, "utf8");
+      let templateContent = `
+      <!DOCTYPE html>
+<html>
+<head>
+    <title>Inquiry Confirmation</title>
+    <style>
+        /* ... existing styles ... */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0071BA;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            border-radius: 8px;
+        }
+        .header {
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header img {
+            max-width: 200px;
+        }
+        .two-column {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .column, .right-section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .full-width {
+            width: 100%;
+        }
+        a {
+            color: #0071BA;
+        }
+        table {
+            background-color: #6EC1E4;
+            border-radius: 8px;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px;
+        }
+        h2, h3, h4 {
+            color: #333;
+        }
+        /* ... additional or modified styles ... */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="https://jetlevel.com/wp-content/uploads/2023/07/jetLeval-logo.png" alt="JetLevel Logo">
+    </div>
+
+    <h2>Inquiry Confirmation</h2>
+    <h3>JetLevel Aviation LLC</h3>
+    
+    <p>Hi ##USER_NAME##,</p>
+    <p>Thank you for your inquiry! We will be in touch soon about the details of your trip. In the meantime, don't hesitate to contact us with any questions or requests.</p>
+    <p>Best regards,</p>
+    <p>JetLevel Aviation LLC</p>
+
+  
+    <div class="full-width">
+        <h4>Itinerary (Local Time)</h4>
+        <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="color: white;">Dep. Date</th>
+                    <th style="color: white;">Dep. Time</th>
+                    <th style="color: white;">Aircraft</th>
+                    <th style="color: white;">From</th>
+                    <th style="color: white;">To</th>
+                    <th style="color: white;">PAX</th>
+                    ##DATE1##
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color: white;">##DATE##</td>
+                    <td style="color: white;">##TIME##</td>
+                    <td style="color: white;">##AIRCRAFT_TYPE##</td>
+                    <td style="color: white;">##FROM##</td>
+                    <td style="color: white;">##TO##</td>
+                    <td style="color: white;">##PAX##</td>
+                    ##DATE2##
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="full-width" style="padding: 20px;">
+        <h4>Contact Details</h4>
+        <p>JetLevel Aviation LLC</p>
+        <p>4325 North Landmark Dr</p>
+        <p>Orlando FL 32817</p>
+        <p>United States</p>
+        <p>Phone: <a href="tel:8555385383">855-538 5383</a></p>
+        <p>Mobile: <a href="tel:4077124863">407-712-4863</a></p>
+        <p><a href="mailto:ricky@jetlevel.com">ricky@jetlevel.com</a></p>
+        <p><a href="http://www.jetlevel.com" style="text-decoration: none; color: #0071BA;">www.jetlevel.com</a></p>
+    </div>
+</div>
+
+</body>
+</html>
+
+      `
+      let templateContent1 =`
+      <!DOCTYPE html>
+<html>
+<head>
+    <title>New Client Lead Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0071BA;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            border-radius: 8px;
+        }
+        .header {
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header img {
+            max-width: 200px;
+        }
+        .two-column {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .column, .right-section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .full-width {
+            width: 100%;
+        }
+        a {
+            color: #0071BA;
+        }
+        table {
+            background-color: #6EC1E4;
+            border-radius: 8px;
+            width: 100%; /* Adjusted width */
+        }
+        th, td {
+            padding: 10px;
+        }
+        h2, h3, h4 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="https://jetlevel.com/wp-content/uploads/2023/07/jetLeval-logo.png" alt="JetLevel Logo">
+    </div>
+
+    <h2>Client Lead Request</h2>
+    <p>Dear JetLevel Aviation LLC,</p>
+    <p>You have just received a new flight request from the "Custom Booking Form" web app.</p>
+
+    <div class="two-column">
+        <div class="column">
+            <h4>Aircraft Type(s) Interested</h4>
+            <p>##AIRCRAFT_TYPE##</p>
+            
+            <h4>Contact</h4>
+            <p>##CUSTOMER_NAME##</p>
+            <p>##EMAIL##</p>
+            <p>##PHONE##</p>
+        </div>
+
+      ##EXTRA_PART##
+    </div>
+
+    <div class="full-width">
+        <h4>Itinerary</h4>
+        <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="color: white;">Dep. Date</th>
+                    <th style="color: white;">Dep. Time</th>
+                    <th style="color: white;">From</th>
+                    <th style="color: white;">To</th>
+                    <th style="color: white;">PAX</th>
+                    ##DATE1##
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color: white;">##DATE##</td>
+                    <td style="color: white;">##TIME##</td>
+                    <td style="color: white;">##FROM##</td>
+                    <td style="color: white;">##TO##</td>
+                    <td style="color: white;">##PAX##</td>
+                    ##DATE2##
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="full-width" style="padding: 20px;">
+        <h4>Your Contact Details As provided to your client</h4>
+        <p>JetLevel Aviation LLC</p>
+        <p>4325 North Landmark Dr</p>
+        <p>Orlando FL 32817</p>
+        <p>United States</p>
+        <p>Phone: <a href="tel:8555385383">855-538 5383</a></p>
+        <p>Mobile: <a href="tel:4077124863">407-712-4863</a></p>
+        <p><a href="mailto:ricky@jetlevel.com">ricky@jetlevel.com</a></p>
+        <p><a href="http://www.jetlevel.com" style="text-decoration: none; color: #0071BA;">www.jetlevel.com</a></p>
+    </div>
+</div>
+
+</body>
+</html>
+
+      `
       templateContent = templateContent.replace("##USER_NAME##", data.firstName+" "+data.lastName);
+      templateContent1 = templateContent1.replace("##CUSTOMER_NAME##", data.firstName+" "+data.lastName);
       templateContent = templateContent.replace("##DATE##", data.startDate.date);
+      templateContent1 = templateContent1.replace("##DATE##", data.startDate.date);
       templateContent = templateContent.replace("##TIME##", data.startDate.time)
+      templateContent1 = templateContent1.replace("##TIME##", data.startDate.time)
       templateContent = templateContent.replace("##FROM##", data.from);
+      templateContent1 = templateContent1.replace("##FROM##", data.from);
       templateContent = templateContent.replace("##TO##", data.to)
+      templateContent1 = templateContent1.replace("##TO##", data.to)
       templateContent = templateContent.replace("##PAX##", data.person)
+      templateContent1 = templateContent1.replace("##PAX##", data.person)
       templateContent = templateContent.replace("##AIRCRAFT_TYPE##", data.craftType);
+      templateContent1 = templateContent1.replace("##AIRCRAFT_TYPE##", data.craftType);
+      templateContent1 = templateContent1.replace("##EMAIL##", data.email);
+      templateContent1 = templateContent1.replace("##PHONE##", data.phone);
       if(data.tourType == "roundTrip"){
         templateContent = templateContent.replace("##DATE1##",`
         <th style="color: white;">Arr. Date</th>
         <th style="color: white;">Arr. Time</th>
         ` );
+        templateContent1 = templateContent1.replace("##DATE1##",`
+        <th style="color: white;">Arr. Date</th>
+        <th style="color: white;">Arr. Time</th>
+        ` );
         templateContent = templateContent.replace("##DATE2##",`
+        <td style="color: white;">${data.endDate.date}</td>
+        <td style="color: white;">${data.endDate.time}</td>
+        ` );
+        templateContent1 = templateContent1.replace("##DATE2##",`
         <td style="color: white;">${data.endDate.date}</td>
         <td style="color: white;">${data.endDate.time}</td>
         
@@ -288,27 +555,40 @@ exports.sendEmail = async(req,res)=>{
       }else{
         templateContent = templateContent.replace("##DATE1##","")
         templateContent = templateContent.replace("##DATE2##","")
+        templateContent1 = templateContent1.replace("##DATE1##","")
+        templateContent1 = templateContent1.replace("##DATE2##","")
 
       }
+
+
+
       //extra data
       if(data.isExtraData){
-        templateContent = templateContent.replace("##EXTRA_PART##", 
-        `<h4>Your Inquiry</h4>
-           
-        <h4>Message</h4>
-        <p>${data.requirement}</p>
-
-        <h4>Traveling with pets</h4>
-        <p>${data.isPet}</p>
-        <h4>Traveling with children</h4>
-        <p>${data.isChild}</p>
-        <h4>Baggage</h4>
-        <p>${data.baggage}</p>
-        <h4>Yourself</h4>
+        templateContent1 = templateContent1.replace("##EXTRA_PART##", 
+        `
+        <div class="right-section">
+        <h4>About the Client</h4>
         <p>${data.youself}</p>
+        
+        <h4>Traveling with pets:</h4>
+        <p>${data.isPet?"Yes":"No"}</p>
+        
+        <h4>Travel with children under 3 years old:</h4>
+        <p>${data.isChild?"Yes":"No"}</p>
+        
+        <h4>Baggage</h4>
+        <ul>
+            ${data.baggage.map(i=>(
+              `<li>${i}</li>`
+            ))}
+        </ul>
+        
+        <h4>Message:</h4>
+        <p>${data.requirement}</p>
+    </div>
         `);    
       }else{
-        templateContent = templateContent.replace("##EXTRA_PART##", "")
+        templateContent1 = templateContent1.replace("##EXTRA_PART##", "")
 
       }
       let mailOptions = {
@@ -322,11 +602,6 @@ exports.sendEmail = async(req,res)=>{
         .then(async (response) => {
           console.log("email send:",response)
 
-          return res.status(200).send({
-            response:{success: true},
-            message: "Email sent Successfully",
-            redirectUri:"https://jetlevel.com/thank-you/"
-          });
         }).catch(async (err) => {
           console.log(err)
 
@@ -336,7 +611,35 @@ exports.sendEmail = async(req,res)=>{
             message: `Error in sending verification email, Please register again ${err}`,
           });
         });
-    
+
+
+        // let clientMails = ["fahd@jetlevel.com", "ricky@jetlevel.com", "kevin@jetlevel.com"]
+        let clientMails = ["asadmuhammad427@gmail.com","aukhan@akru.co"]
+          let mailOptions1 = {
+            from: process.env.EMAIL, //Sender Address
+            to: clientMails,
+            subject: `Client Lead Request`,
+            html: templateContent1,
+          };
+          await sendEmail(mailOptions1)
+          .then(async (response) => {
+            console.log("email send:",response)
+  
+          }).catch(async (err) => {
+            console.log(err)
+  
+            return res.status(400).send({
+              response:{success: false},
+              message: `Error in sending verification email, Please register again ${err}`,
+            });
+          });
+        
+        
+        return res.status(200).send({
+          response:{success: true},
+          message: "Email sent Successfully",
+          redirectUri:"https://jetlevel.com/thank-you/"
+        });
   }catch(err){
     console.log(err)
 
