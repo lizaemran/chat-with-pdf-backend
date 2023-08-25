@@ -276,7 +276,19 @@ exports.sendEmail = async(req,res)=>{
       templateContent = templateContent.replace("##PAX##", data.person)
       templateContent = templateContent.replace("##AIRCRAFT_TYPE##", data.craftType);
       if(data.tourType == "roundTrip"){
-        templateContent = templateContent.replace("##DATE1##", data.endDate);
+        templateContent = templateContent.replace("##DATE1##",`
+        <th style="color: white;">Arr. Date</th>
+        <th style="color: white;">Arr. Time</th>
+        ` );
+        templateContent = templateContent.replace("##DATE2##",`
+        <td style="color: white;">${data.endDate.date}</td>
+        <td style="color: white;">${data.endDate.time}</td>
+        
+        ` );
+      }else{
+        templateContent = templateContent.replace("##DATE1##","")
+        templateContent = templateContent.replace("##DATE2##","")
+
       }
       //extra data
       if(data.isExtraData){
