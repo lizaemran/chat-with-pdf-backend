@@ -266,7 +266,7 @@ exports.sendEmail = async(req,res)=>{
     }
     
 
-      let templatePath = "mail_html_templates/inquiry_confirmation.html";
+      let templatePath = "../mail_html_templates/inquiry_confirmation.html";
       let templateContent = fs.readFileSync(templatePath, "utf8");
       templateContent = templateContent.replace("##USER_NAME##", data.firstName+" "+data.lastName);
       templateContent = templateContent.replace("##DATE##", data.startDate.date);
