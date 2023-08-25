@@ -1,5 +1,7 @@
 let { Airport } = require("../models/Airport");
 let { Airport2 } = require("../models/Airport2");
+const sendEmail  = require("../helpers")
+const fs = require("fs")
 // let mongoose = require("mongoose");
 // const axios = require("axios");
 exports.getAllJetInfo = async (req, res) => {
@@ -235,3 +237,98 @@ exports.update = async (req, res) => {
   }
 };
 
+
+
+exports.sendEmail = async(req,res)=>{
+  try{
+    let data = req.body
+    console.log(data)
+    let requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "tourType",
+      "from",
+      "to",
+      "craftType",
+      "startDate",
+      "person",
+    ] 
+    for (let key of requiredFields){
+      if (!data[key] || data[key] == '' || data[key] == undefined || data[key] == null){
+        return res.status(400).send({error:`please provide ${key}`})
+      }
+    }
+    
+    if (data.tourType == "roundTrip" && !data.endDate){
+    return res.status(400).send({error:`please provide endDate`})
+    }
+    
+
+      let templatePath = "mail_html_templates/inquiry_confirmation.html";
+      let templateContent = fs.readFileSync(templatePath, "utf8");
+      templateContent = templateContent.replace("##USER_NAME##", data.firstName+" "+data.lastName);
+      templateContent = templateContent.replace("##DATE##", data.startDate.date);
+      templateContent = templateContent.replace("##TIME##", data.startDate.time)
+      templateContent = templateContent.replace("##FROM##", data.from);
+      templateContent = templateContent.replace("##TO##", data.to)
+      templateContent = templateContent.replace("##PAX##", data.person)
+      templateContent = templateContent.replace("##AIRCRAFT_TYPE##", data.craftType);
+      if(data.tourType == "roundTrip"){
+        templateContent = templateContent.replace("##DATE1##", data.endDate);
+      }
+      //extra data
+      if(data.isExtraData){
+        templateContent = templateContent.replace("##EXTRA_PART##", 
+        `<h4>Your Inquiry</h4>
+           
+        <h4>Message</h4>
+        <p>${data.requirement}</p>
+
+        <h4>Traveling with pets</h4>
+        <p>${data.isPet}</p>
+        <h4>Traveling with children</h4>
+        <p>${data.isChild}</p>
+        <h4>Baggage</h4>
+        <p>${data.baggage}</p>
+        <h4>Yourself</h4>
+        <p>${data.youself}</p>
+        `);    
+      }
+      let mailOptions = {
+        from: process.env.EMAIL, //Sender Address
+        to: data.email,
+        subject: `Thank you for your inquiry`,
+        html: templateContent,
+      };
+    
+      await sendEmail(mailOptions)
+        .then(async (response) => {
+          console.log("email send:",response)
+
+          return res.status(200).send({
+            response:{success: true},
+            message: "Email sent Successfully",
+            redirectUri:"https://jetlevel.com/thank-you/"
+          });
+        }).catch(async (err) => {
+          console.log(err)
+
+
+          return res.status(400).send({
+            response:{success: false},
+            message: `Error in sending verification email, Please register again ${err}`,
+          });
+        });
+    
+  }catch(err){
+    console.log(err)
+
+
+    return res.status(400).send({
+      response:{success: false},
+      message: `Oops, something went wrong - ${err}`,
+    });
+  }
+}
