@@ -9,13 +9,13 @@ const { payments } = require("../controllers/payment");
 router.post("/userRegister", userRegister);
 router.get("/verifyEmail/:token", verifyEmail);
 router.post("/userLogin", userLogin);
-router.get("/isUserPlus", isAuthenticated,isUserPlus);
+router.get("/isUserPlus",isUserPlus);
 
-router.post("/upload", isAuthenticated,upload);
-router.post("/chat", isAuthenticated,chat);
+router.post("/upload",upload);
+router.post("/chat",chat);
 router.post("/openChat",openChat);
-router.get("/getAllChats", isAuthenticated,getAllChats);
-router.post("/deleteChat", isAuthenticated,deleteChat);
+router.get("/getAllChats",getAllChats);
+router.post("/deleteChat",deleteChat);
 
 router.post("/payments", isAuthenticated,payments);
 

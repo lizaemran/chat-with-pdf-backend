@@ -8,7 +8,7 @@ const {Chat} = require("../models/Chat")
 const {User} = require("../models/User")
 // open ai config
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: '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',
 });
 // open ai instance
 const openai = new OpenAIApi(configuration);
@@ -18,15 +18,15 @@ const openai = new OpenAIApi(configuration);
 let chat = async (req, res) => {
   try {
     let message = req.body.message;
-    let _id = req.body._id;
+    // let _id = req.body._id;
  
     if (!message) {
       return res
         .status(400)
         .json({ message: "please provide a prompt", response: {} });
     }
-    let userDtails = await User.findOne({_id:req.user.id})
-    if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
+    // let userDtails = await User.findOne({_id:req.user.id})
+    // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
     // if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
     //   if(!userDtails.is_user_plus && userDtails.no_of_questions == 3){
     //     return res
@@ -42,22 +42,24 @@ let chat = async (req, res) => {
     // }else{
     //   userDtails.no_of_questions = 0
     // }
-    let chat  = await Chat.findOne({_id,userId:req.user.id})
-    if(!chat) {
-      return res
-    .status(400)
-    .json({ message: "no chat found", response: {} });
-    }
+    // let chat  = await Chat.findOne({_id,userId:req.user.id})
+    // if(!chat) {
+    //   return res
+    // .status(400)
+    // .json({ message: "no chat found", response: {} });
+    // }
+
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages:[...chat.messages,{role: "user", content: message}],
+      messages:message,
     });
 
-    chat.messages = [...chat.messages,{role: "user", content: message},response.data.choices[0].message]
-    await chat.save();
-    userDtails.no_of_questions += 1;
-    userDtails.updatedAt = Date.now();
-    await userDtails.save();
+    // chat.messages = [{role: "user", content: message},response.data.choices[0].message]
+    // await chat.save();
+    // userDtails.no_of_questions += 1;
+    // userDtails.updatedAt = Date.now();
+    // await userDtails.save();
+    console.log('response', response)
     return res
       .status(200)
       .json({ message: "Success", response: response.data.choices[0].message });
@@ -140,9 +142,10 @@ let deleteChat = async (req, res) => {
 
 // Define route for file upload
 let upload = async (req, res) => {
+  console.log('key', process.env.OPENAI_API_KEY, 'req', req.files.file)
     try {
-      let userDtails = await User.findOne({_id:req.user.id})
-      if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
+      // let userDtails = await User.findOne({_id:req.user.id})
+      // if(!userDtails) return res.status(404).json({message:"user not found. please signup to continue",response: {}})
       // if(new Date(Date.now()).toLocaleDateString() == new Date(userDtails.updatedAt).toLocaleDateString()){
       //   if(!userDtails.is_user_plus && userDtails.no_of_files == 3){
       //     return res
@@ -165,25 +168,28 @@ let upload = async (req, res) => {
           .json({ message: "No file uploaded.", response: {} });
       }
       let arr = req.files.file.name.split(".");
-      console.log(arr)
+      console.log(arr, 'arr')
       let data;
-      if (arr[1] == "xlsx" || arr[1] == "xls") {
-        console.log("in")
+      if (arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls") {
+        console.log("in uploading...")
         // convert xls to json
         let wb = xlsx.read(req.files.file.data);
         let jsonData = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
         data = JSON.stringify(jsonData);
        
-      } else if (arr[1] == "pdf") {
+      } else if (arr[arr.length - 1] == "pdf" || arr[arr.length - 1] == 'PDF') {
         // convert pdf to string
+        console.log('converting into stringg...')
         data = await pdfParse(req.files.file);
+        console.log('data', data)
+
         data = data.text;
-      } else if (arr[1] == "doc" || arr[1] == "docx") {
+      } else if (arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx") {
         // Extract text from the document
         let result= await mammoth.extractRawText({buffer:req.files.file.data})
         data = result.value;
       }
-
+      console.log('data processing', data)
 
       // Perform NLP using OpenAi API
       const response = await openai.createChatCompletion({
@@ -199,21 +205,21 @@ let upload = async (req, res) => {
         response.data.choices[0].message,
       ];
 
-      await Chat.create({
-        userId: req.user.id,
-        title: req.files.file.name,
-        messages: allMessages,
-        createdAt:Date.now(),
-        updatedAt:Date.now()
-      })
-      userDtails.no_of_files += 1;
-      userDtails.updatedAt = Date.now();
-      await userDtails.save();
+      // await Chat.create({
+      //   userId: '123',
+      //   title: req.files.file.name,
+      //   messages: allMessages,
+      //   createdAt:Date.now(),
+      //   updatedAt:Date.now()
+      // })
+      // userDtails.no_of_files += 1;
+      // userDtails.updatedAt = Date.now();
+      // await userDtails.save();
       return res
         .status(200)
-        .json({ message: "Success" ,response: {}});
+        .json({ message: "Success" ,response: response.data.choices[0].message});
     } catch (error) {
-      console.error("Error in upload", error);
+      console.error("Error in upload", error.response);
       return res
         .status(500)
         .json({
